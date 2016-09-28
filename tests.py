@@ -82,13 +82,13 @@ user_id = db.Column(db.Integer,
         #Commit changes
         db.session.commit()
 
-    def test_find_place(self):
-        """Can we find a place in the database"""
+    def test_find_user(self):
+        """Can we find a user in the database"""
 
         #Query the database for a user
-        place = Places.query.filter_by(name='Transamerica Pyramid Center').first()
+        user = User.query.filter_by(name='Minnie').first()
         #What the result of query should be:
-        self.assertEqual(place.wifi, 'no')
+        self.assertEqual(user.time_zone, 'PST')
 
     def tearDown(self):
         """Things to do at end of every test"""
