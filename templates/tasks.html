@@ -18,6 +18,9 @@
 <!-- This div is the main div where the user will see their current tasks -->
         <div id="main_task_div" class="col-sm-9 col-lg-10">
             <!-- Content -->
+            <!-- Jinja loop feed from the db the current tasks -->
+            {% for task in tasks %}
+            {% endfor %}
         </div>
     </div>
 </div>

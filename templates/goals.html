@@ -17,7 +17,9 @@
 <!-- This div is the main div where the user will see their current goals -->
         <div id="main_goal_div" class="col-sm-9 col-lg-10">
             <!-- Content  -->
-            
+            <!-- Jinja loop feed from the db the current goals -->
+            {% for goal in goals %}
+            {% endfor %}
         </div>
     </div>
 </div>
