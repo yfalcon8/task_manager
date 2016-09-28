@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block extra_js %}
+<!-- Here is where the link to the JS would go once that is coded -->
+<!-- <script type="text/javascript" src="static/"></script> -->
+{% endblock %}
+{% block content %}
+<!-- This div will be the fixed left bar for the user to click to act on the tasks that are in the "main task div" below -->
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-lg-2" id="left_bar">
+            <nav class="navbar navbar-default navbar-fixed-side">
+                <button id="add_task">Add Task</button><br>
+                <button id="complete_task">Mark Task Complete</button><br>
+                <button id="delete_task">Delete Task</button><br>
+            </nav>
+        </div>
+
+<!-- This div is the main div where the user will see their current tasks -->
+        <div id="main_task_div" class="col-sm-9 col-lg-10">
+            <!-- Content -->
+        </div>
+    </div>
+</div>
+{% endblock %}
