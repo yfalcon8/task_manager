@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block extra_js %}
+<!-- Here is where the link to the JS would go once that is coded -->
+<!-- <script type="text/javascript" src="static/"></script> -->
+{% endblock %}
+{% block content %}
+<!-- This div will be the fixed left bar for the user to click to act on the tasks that are in the "main task div" below -->
+<div id="left_bar">
+    <button id="add_task">Add Task</button><br>
+    <button id="complete_task">Mark Task Complete</button><br>
+    <button id="delete_task">Delete Task</button><br>
+</div>
+<!-- This div is the main div where the user will see their current tasks -->
+<div id="main_task_div">
+</div>
+{% block content %}
