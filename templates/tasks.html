@@ -19,8 +19,18 @@
         <div id="main_task_div" class="col-sm-9 col-lg-10">
             <!-- Content -->
             <!-- Jinja loop feed from the db the current tasks -->
-            {% for task in tasks %}
-            {% endfor %}
+            <table>
+                {% for task in tasks %}
+                <tr>
+                    {% set rowloop = loop %}
+                    {% for task_name in row %}
+                    <!-- not sure how this jinja for loop with tables works but trying this out -->
+                    <td id="cell-{{ rowloop.index }}-{{ loop.index }}">{{ task_name }}</td>
+                    {% for due_date in row %}
+                    <td id="cell-{{ rowloop.index }}-{{ loop.index }}">{{ due_date }}</td>
+                </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
 </div>
