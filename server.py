@@ -57,7 +57,7 @@ app.jinja_env.auto_reload = True
 
 ################ Render information on goals and tasks from Model #############
 
-@app.route('/goals/<int:user_id>', methods=['GET'])
+@app.route('/goals/<username>', methods=['GET'])
 @login_form_required
 def render_goals():
     """Queries DB to render the user's goals and takes them to goals.html"""
@@ -70,7 +70,7 @@ def render_goals():
                            description=description)
 
 
-@app.route('/tasks/<int:user_id>', methods=['GET'])
+@app.route('/tasks/<username>', methods=['GET'])
 @login_form_required
 def render_tasks():
     """Queries DB for user's tasks and takes them to tasks.html"""
