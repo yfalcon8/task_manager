@@ -67,7 +67,7 @@ def register_form():
     db.session.commit()
 
     #Send confirmation msg and back to home page
-    flash("Welcome, new user. Let's get things done!")
+    flash("Welcome, new user. Wanna get things done?")
     return redirect("/")
 
 
