@@ -104,30 +104,32 @@ def logout_form():
 ################## Render information on goals and tasks from Model ###
 #project-tracker-flask
 @app.route('/goals/<int:user_id>', methods=['GET']) 
+@login_form_required
 def render_goals():
     """Queries DB to render the user's goals and takes them to goals.html"""
 
-    if login_form:
-        goals = db.session.query(Goal.active_goals).all()
-        description = db.session.query(Goal.description).all()
+  
+    goals = db.session.query(Goal.active_goals).all()
+    description = db.session.query(Goal.description).all()
 
     return render_template("goals.html", 
                             active_goals=goals,
                             description=description)
 
 @app.route('/tasks/<int:user_id>', methods=['GET']) 
+@login_form_required
+def render_tasks():
     """Queries DB for user's tasks and takes them to tasks.html"""
 
-    if login_form:
-        tasks = db.session.query(Task.task_name).all()
-        due_date = db.session.query(Task.due_date).all()
+    tasks = db.session.query(Task.task_name).all()
+    due_date = db.session.query(Task.due_date).all()
 
     
     return render_template("tasks.html",
                             tasks=tasks,
                             due_date=due_date)
 
-
+@login_form_required
 def make_new_task(task_name, due_date, priority, date_added, open_close_status, task_frequency):
     """Add a new task to the DB"""
 
