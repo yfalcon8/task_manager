@@ -1,10 +1,12 @@
 """Models and database functions for Task Manager project."""
 
+ 
 from flask_sqlalchemy import SQLAlchemy
-
+ 
 db = SQLAlchemy()
 
 import datetime
+
 
 
 ##############################################################################
@@ -25,19 +27,21 @@ class User(db.Model):
     phone_number = db.Column(db.Integer, nullable=True)
 
     def __repr__(self):
-        """Provide helpful representation when printed."""
 
-        return "<User user_id=%s username=%s email=%s>" % (self.user_id,
-                                                           self.username,
-                                                           self.email)
+     """Provide helpful representation when printed."""
 
-    #Define relationship with tasks table
+    return "<User user_id=%s username=%s email=%s>" % (self.user_id,
+                                               self.username, self.email)
+
+    #Define relationship tasks table
     tasks = db.relationship("Task",
-                            backref=db.backref("users"))
+                         backref=db.backref("users"))
 
-    #Define relationship with projects table
+    #Define relationship goal table
     goal = db.relationship("Goal",
-                           backref=db.backref("users"))
+                               backref=db.backref("users"))
+
+
 
     @classmethod
     def create_user(cls, email, username, password):
@@ -59,10 +63,35 @@ class User(db.Model):
         else:
             return False
 
-    def check_by_userid(cls, user_id):
+
+
+
+    def check_by_userid(cls,user_id):
         """Search user table by user_id"""
 
         return cls.query.filter(cls.user_id == user_id).one()
+
+
+
+
+class Goal(db.Model):
+     """Goals for an individual user of website."""
+
+
+    __tablename__ = "goals"
+
+    goal_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    description = db.Column(db.Text, nullable=False)
+    date_started = db.Column(db.DateTime(timezone=True),
+                          nullable=False, default=make_timestamp)   #UTC timezone date/time stamp.
+    active_goal = db.Column(db.Boolean, nullable=False, default=True) #may not need this in case 
+    time_toachieve = db.Column(db.String(50), nullable=False) #expected response month ,day, year, quarter, 6months
+    goalcat_name= db.Column(db.String(50), nullable=False) #as dropdown in main screen
+
+
+    user = db.relationship('User', backref='goals')
+
 
 
 class Goal(db.Model):
@@ -81,6 +110,7 @@ class Goal(db.Model):
 
     user = db.relationship('User', backref='goals')
 
+
     @classmethod
     def check_by_user_id(cls, user_id):
         """Checks goal table, to ensure goal isnt already there"""
@@ -95,6 +125,9 @@ class Goal(db.Model):
         return "<goal_id=%s description=%s timeperiod=%s>" % (self.goal_id, self.description, self.timeperiod)
 
 
+
+
+
 class Task(db.Model):
     """Tasks for goals """
 
@@ -103,11 +136,14 @@ class Task(db.Model):
     task_id = db.Column(db.Integer, primary_key=True)
     task_name = db.Column(db.String, nullable=False)
     due_date = db.Column(db.Date, nullable=False)
-    priority = db.Column(db.Integer, nullable=False)  # can have value from 1 to 10
+    priority = db.Column(db.Integer, nullable=False) #can have value from 1 to 10
     date_added = db.Column(db.Date, default=datetime.datetime.utcnow())
-    open_close_status = db.Column(db.Integer)  # will have value 1 or 0 ,1 default for open tasks, 0 for closed tasks
+    open_close_status = db.Column(db.Integer) #will have value 1 or 0 ,1 default for open tasks, 0 for closed tasks
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    task_frequency = db.Column(db.String(50), nullable=False)
+    task_frequency = db.Column(db.String(50), nullable=False) #daily, weekly,monthly
+    taskcat_name = db.Column(db.String(50), nullable=False) #task category as dropdown, request.form.get
+
+
 
     def __init__(self, task_name, due_date, priority, date_added, open_close_status, user_id):
         self.task_name = task_name
@@ -120,11 +156,14 @@ class Task(db.Model):
     def __repr__(self):
         return '<name {0}>'.format(self.name)
 
+
     def open_tasks():
         return db.session.query(Task).filter_by(open_close_status='1').order_by(Task.due_date.asc())
 
+
     def closed_tasks():
         return db.session.query(Task).filter_by(open_close_status='0').order_by(Task.due_date.asc())
+
 
     user = db.relationship('User', backref='tasks')
 
@@ -144,83 +183,106 @@ class Reminders(db.Model):
 
     def __repr__(self):
 
-        return "<reminder_id=%s goal_id=%>" % (self.reminder_id,
-                                               self.goal_id)
+
+        return "<reminder_id=%s goal_id=%>" % (self.reminder_id, self.goal_id)
 
 
-class TaskCategory(db.Model):
-    """Task categories for the goals"""
-
-    __tablename__ = "taskcategories"
-
-    taskcat_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    taskcat_name = db.Column(db.String(50), nullable=False)
-
-    tasks = db.relationship('Task', backref='taskcategories')
-
-    def __repr__(self):
-
-        return "<taskcat_id=%s taskcat_name=%s>" % (self.taskcat_id, self.taskcat_name)
 
 
-class GoalCategory(db.Model):
-    """Goal categories for the user"""
 
-    __tablename__ = "goalcategories"
+class GoalCompletion(db.Model):
+    """Tracks completion of a goal"""
 
-    goalcat_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    goalcat_name = db.Column(db.String(50), nullable=False)
+    __tablename__ = "trackcompletion"
 
-    goals = db.relationship('Goal', backref='goalcategories')
+    completion_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    goal_id = db.Column(db.Integer, db.ForeignKey('goals.goal_id'))
+    marked_complete = db.Column(db.DateTime(timezone=True),
+                           nullable=True, default=make_timestamp) #UTC timezone date/time stamp.
+    user_notes = db.Column(db.Text, nullable=True) #if user wants to comment while completing a goal
+
+    goal = db.relationship('Goal', backref='trackcompletion')
+    user = db.relationship('User', secondary='goals', backref='trackcompletion')
 
     def __repr__(self):
 
-        return "<goalcat_id=%s goalcat_name=%s>" % (self.goalcat_id, self.goalcat_name)
+        return "<completion_id=%s marked_complete=%s>" % (self.completion_id, self.marked_complete)
 
 
-
+#####################################################################################################
 
 
 #need association tables , need class to track completion
 # class LinkGoalTask(db.Model):
 # """Association Model to connect Goals and Categories"""
 
-#class TrackCompletion(db.Model):
-#       """Link GOal and task with users"""
 
 #class Calendar/info if any
 
 
 
+#need to add to server.py as part of delete task-
+
+# def delete_entry(task_id):
+#     new_id = task_id
+#     task = db.session.query(Task).filter_by(task_id=new_id)
+#     if session['user_id'] == task.first().user_id :
+#         task.delete()
+#         db.session.commit()
+#         flash('The task was deleted. Would you like to add a new one?')
+#         return redirect(#FIXME #URLNAME)
 
 
+#need to add to server.py as part of displaying user task-
+# @app.route('/user/<int:user_id>')
+# def user_goals(user_id):
+#     """Display user's goals"""
+
+#     user_id = session["user_id"]
+
+#     if Goal.check_by_user_id(user_id) is False:
+#         flash("You have no goals currently! Would you like to add one!")
+#         return render_template('add_goal.html')
+#     else:
+
+#         user = User.check_by_user_id(user_id)
+         # goals = Goal.check_by_user_id(user_id)
 
 
+############################################################################
+# extra class if reqd later-
+
+# class TaskCategory(db.Model):
+#     """Task categories for the goals""" #this will be a static list 
 
 
+#     __tablename__ = "taskcategories"
+
+#     taskcat_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     taskcat_name = db.Column(db.String(50), nullable=False)
 
 
+#     tasks = db.relationship('Task', backref='taskcategories')
 
+#     def __repr__(self):
 
+#         return "<taskcat_id=%s taskcat_name=%s>" % (self.taskcat_id, self.taskcat_name)
 
+ 
+# class GoalCategory(db.Model):
+#     """Goal categories for the user""" #this will be a static list
+   
 
+#     __tablename__ = "goalcategories"
 
+#     goalcat_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     goalcat_name= db.Column(db.String(50), nullable=False)
 
+#     goals = db.relationship('Goal', backref='goalcategories')
 
+#     def __repr__(self):
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+#         return "<goalcat_id=%s goalcat_name=%s>" % (self.goalcat_id, self.goalcat_name)
 
 
 
@@ -228,6 +290,8 @@ class GoalCategory(db.Model):
 ############################################################################
 
 def init_app():
+
+    from flask import Flask
     from server import app
 
     connect_to_db(app)
@@ -245,9 +309,13 @@ def connect_to_db(app):
 
 if __name__ == "__main__":
     #To utilize database interactively
+
+    from flask import Flask
     from server import app
 
-    # Need to add to db.create_all()
-    connect_to_db(app)
+# Need to add to db.create_all() 
 
+    connect_to_db(app)
     print "Connected to DB."
+
+

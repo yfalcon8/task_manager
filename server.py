@@ -1,4 +1,5 @@
-# <<<<<<< HEAD
+"""Server file for Task Manager."""
+
 from jinja2 import StrictUndefined
 
 # Flask: A class that we import. An instance of this class will be the
@@ -7,7 +8,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 
 #######################
-#### configuration ####
+#### Configuration ####
 #######################
 
 # Instantiates Flask. "__name__" is a special Python variable for the name of
@@ -21,18 +22,9 @@ app.jinja_env.undefined = StrictUndefined
 # Prevents the need to restart server when HTML/CSS is changed.
 app.jinja_env.auto_reload = True
 
-
-# @app.route('/') is a Python decorator. '/' in the decorator maps directly
-# to the URL the user requested which is the homepage. The index function
-# is triggered when the URL is visited.
-# =======
-"""Server file for Task Manager."""
-
 #Import necessary modules, etc.
 #Access local env variables
-import jinja2
 import os
-import sys
 
 #Utilize Jinja for HTML templates
 from jinja2 import StrictUndefined
@@ -41,7 +33,7 @@ from flask import Flask, render_template, request, flash, redirect, session, url
 
 #Use toolbar for debugging
 # from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, Places
+from model import connect_to_db, db, User
 
 #Instantiates Flask and "__name__" informs Flask where to find files
 app = Flask(__name__, static_url_path='/static')

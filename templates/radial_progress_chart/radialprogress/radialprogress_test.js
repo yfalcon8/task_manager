@@ -194,7 +194,7 @@ function changeSkin(val) {
     themes.forEach(function (theme,i) {
         //If the user selects "none" for the skin we need to tell the theme to release the component and clear
         //any applied styles.
-        if (val == "none") {
+        if (val == "Neon") {
             theme.release();
             vizs[i].update();
         }
