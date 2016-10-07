@@ -6,6 +6,7 @@
 
 #Access local env variables
 import os
+import sys
 
 from jinja2 import StrictUndefined
 
@@ -14,9 +15,11 @@ from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, request, flash, redirect, session
 
-#Use toolbar for debugging
+# Use toolbar for debugging
 # from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, User, Goal, Task
+from model import connect_to_db, db, User, Goal, Task, Places
+
+from flask_debugtoolbar import DebugToolbarExtension
 
 # Instantiates Flask and "__name__" informs Flask where to find files.
 # Instantiates Flask. "__name__" is a special Python variable for the name of
@@ -24,14 +27,14 @@ from model import connect_to_db, db, User, Goal, Task
 # templates, static files, and so on.
 app = Flask(__name__, static_url_path='/static')
 
-#Set a secret key to enable the flask session cookies and the debug toolbar
+# Set a secret key to enable the flask session cookies and the debug toolbar
 app.config['SECRET_KEY'] = os.environ.get("FLASK_SECRET_KEY", "seKriTz")
 
-# Prevents the need to restart server when HTML/CSS is changed.
-app.jinja_env.auto_reload = True
-
-# Raises an error when an undefined variable is used in Jinja2.
+#Raises an error when an undefined variable is used in Jinja2
 app.jinja_env.undefined = StrictUndefined
+#Prevents the need to restart server when HTML/CSS is changed
+
+app.jinja_env.auto_reload = True
 
 
 ###################### Core Routes ##########################
@@ -63,6 +66,13 @@ def render_tasks():
                            tasks=tasks,
                            due_date=due_date)
 
+###################### Core Routes ##########################
+
+@app.route('/')
+def index():
+    """Homepage."""
+
+    return render_template("landing.html")
 
 @login_form_required
 def make_new_task(task_name, due_date, priority, date_added, open_close_status, task_frequency):
@@ -81,8 +91,6 @@ def make_new_task(task_name, due_date, priority, date_added, open_close_status, 
     print "Successfully added task: {}".format(task_name)
 
 ################ Login/out Registration #####################
-
-
 @app.route("/go_register")
 def register_page():
     """Send to registration form"""
@@ -111,6 +119,9 @@ def register_form():
 
     #Send confirmation msg and back to home page
     flash("Welcome, new user. Let's get things done!")
+
+    flash("Welcome, new user. Wanna get things done?")
+
     return redirect("/")
 
 
@@ -122,7 +133,11 @@ def login_form():
     username = request.form.get("username")
     password = request.form.get("password")
 
+
     # Do these credentials align within the database?
+
+    #Do these credentials align within the database?
+
     uq = User.query
     user_object = uq.filter_by(email=username).first()
     if user_object.email == username and user_object.password == password:
@@ -140,10 +155,10 @@ def login_form():
 def logout_form():
     """Process logout form"""
 
+
     # Remove session and notify user
-    session.clear()
-    flash("Logged out. Don't be gone for too long!")
-    return redirect("/")
+
+    # Remove session and notify user
 
 
 ################### Helper Functions #######################
@@ -159,7 +174,7 @@ if __name__ == "__main__":
 
     # app.config['TRAP_HTTP_EXCEPTIONS'] = True
     # app.config['Testing'] = True
-    #Use of debug toolbar
+    # Use of debug toolbar
     # DebugToolbarExtension(app)
 
     #Run app locally (simple)
