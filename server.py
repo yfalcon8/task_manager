@@ -12,7 +12,7 @@ from jinja2 import StrictUndefined
 # Flask: A class that we import. An instance of this class will be the
 # WSGI application.
 
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, url_for
 
 #Use toolbar for debugging
 from flask_debugtoolbar import DebugToolbarExtension
@@ -113,21 +113,10 @@ def login_required(f):
 ###################### Core Routes ##########################
 
 ################ Render information on goals and tasks from Model #############
-
 @app.route('/')
 def landing():
+
     return render_template("landing.html")
-
-@login_required
-def render_goals():
-    """Queries DB to render the user's goals and takes them to goals.html"""
-
-    goals = db.session.query(Goal.active_goals).all()
-    description = db.session.query(Goal.description).all()
-
-    return render_template("goals.html",
-                           active_goals=goals,
-                           description=description)
 
 
 @app.route('/goals/<int:user_id>', methods=['GET'])

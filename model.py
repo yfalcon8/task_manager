@@ -109,8 +109,6 @@ class Goal(db.Model):
         return "<goal_id=%s description=%s timeperiod=%s>" % (self.goal_id, self.description, self.timeperiod)
 
 
-
-
 class Task(db.Model):
     """Tasks for tasks """
 
