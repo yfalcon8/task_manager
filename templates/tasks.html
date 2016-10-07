@@ -13,8 +13,15 @@
             <nav class="navbar navbar-default navbar-fixed-side">
 
                 <button id="add_task">Add Task</button><br>
-                
-                <div id="addTaskModal" class="modal"> 
+
+            </nav>
+        </div>
+
+<!-- This div is the main div where the user will see their current tasks -->
+        <div id="main_task_div" class="col-sm-9 col-lg-10">
+            <!-- Content -->
+            <!-- Jinja loop feed from the db the current tasks -->
+                            <div id="addTaskModal" class="modal"> 
                     <div class="model-content">
                         <span class="close">X</span>
                         <p> 
@@ -41,15 +48,26 @@
                     </p>
                     </div>
                 </div>
-
-                <script type="text/javascript">
+            <table>
+                {% for task in tasks %}
+                <tr>
+                    {% set rowloop = loop %}
+                    {% for task_name in row %}
+                    <!-- not sure how this jinja for loop with tables works but trying this out -->
+                    <td id="cell-{{ rowloop.index }}-{{ loop.index }}">{{ task_name }}</td>
+                    {% for due_date in row %}
+                    <td id="cell-{{ rowloop.index }}-{{ loop.index }}">{{ due_date }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+                            <script type="text/javascript">
                 //make an ajax call that shows the task is added - this is currently an alert box
 
                 //when the button w the id add task is clicked, an alert box tells the user
-                $("#add_task").on("click",  function(){
-                    alert("Task is added")
-                }
-            );
+                // $("#add_task").on("click",  function(){
+            //         alert("Task is added")
+            //     }
+            // );
 
             //want the user to go to a modal window where they can add a task
             var modal = document.getElementById("addTaskModal");
@@ -95,25 +113,6 @@
                 }
             );
                 </script>
-            </nav>
-        </div>
-
-<!-- This div is the main div where the user will see their current tasks -->
-        <div id="main_task_div" class="col-sm-9 col-lg-10">
-            <!-- Content -->
-            <!-- Jinja loop feed from the db the current tasks -->
-            <table>
-                {% for task in tasks %}
-                <tr>
-                    {% set rowloop = loop %}
-                    {% for task_name in row %}
-                    <!-- not sure how this jinja for loop with tables works but trying this out -->
-                    <td id="cell-{{ rowloop.index }}-{{ loop.index }}">{{ task_name }}</td>
-                    {% for due_date in row %}
-                    <td id="cell-{{ rowloop.index }}-{{ loop.index }}">{{ due_date }}</td>
-                </tr>
-                {% endfor %}
-            </table>
         </div>
     </div>
 </div>
