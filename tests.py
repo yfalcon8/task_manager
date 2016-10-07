@@ -3,6 +3,7 @@ from unittest import TestCase
 from server import app
 from model import connect_to_db, db, User
 
+
 class FlaskRouteTests(TestCase):
     """Flask tests."""
 
@@ -61,6 +62,17 @@ class FlaskTestDatabase(TestCase):
         #In case this is run more than once, empty out existing data
         User.query.delete()
 
+        user_id = db.Column(db.Integer,
+                            autoincrement=True,
+                            primary_key=True)
+        username = db.Column(db.String(64), unique=True, nullable=False)
+        password = db.Column(db.String(200), nullable=False)
+        profile_img = db.Column(db.String(200), nullable=True)
+        email = db.Column(db.String(50), unique=True, nullable=False)
+        time_zone = db.Column(db.String(25), nullable=True)
+        phone_number = db.Column(db.Integer, nullable=True)
+
+
         #Add test example users
         self.user_1 = User(username='Minnie',
                                password='MouseGal',
@@ -79,6 +91,14 @@ class FlaskTestDatabase(TestCase):
         db.session.add_all([self.user_1, self.user_2])
         #Commit changes
         db.session.commit()
+
+    def test_find_user(self):
+        """Can we find a user in the database"""
+
+        #Query the database for a user
+        user = User.query.filter_by(name='Minnie').first()
+        #What the result of query should be:
+        self.assertEqual(user.time_zone, 'PST')
 
     def tearDown(self):
         """Things to do at end of every test"""
