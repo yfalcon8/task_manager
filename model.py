@@ -21,7 +21,7 @@ class User(db.Model):
     profile_img = db.Column(db.String(200), nullable=True)
     email = db.Column(db.String(50), unique=True, nullable=False)
     time_zone = db.Column(db.String(25), nullable=True)
-    phone_number = db.Column(db.Integer, nullable=True)
+    phone_number = db.Column(db.String(15), nullable=True)
 
     # Define relationship tasks table
     tasks = db.relationship("Task",
@@ -235,7 +235,7 @@ class GoalCompletion(db.Model):
 # extra class if reqd later-
 
 # class TaskCategory(db.Model):
-#     """Task categories for the goals""" #this will be a static list 
+#     """Task categories for the goals""" #this will be a static list
 
 
 #     __tablename__ = "taskcategories"

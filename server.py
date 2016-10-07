@@ -114,6 +114,21 @@ def login_required(f):
 
 ################ Render information on goals and tasks from Model #############
 
+@app.route('/')
+def landing():
+    return render_template("landing.html")
+
+@login_required
+def render_goals():
+    """Queries DB to render the user's goals and takes them to goals.html"""
+
+    goals = db.session.query(Goal.active_goals).all()
+    description = db.session.query(Goal.description).all()
+
+    return render_template("goals.html",
+                           active_goals=goals,
+                           description=description)
+
 
 @app.route('/goals/<int:user_id>', methods=['GET'])
 @login_required
@@ -147,6 +162,7 @@ def make_new_task(task_name, due_date, priority, date_added, open_close_status, 
 
     QUERY = """INSERT INTO Task (task_name, due_date, priority, date_added, open_close_status)
                VALUES (:task_name, :due_date, :priority, :date_added, :open_close_status)"""
+
     db_cursor = db.session.execute(QUERY, {'task_name': task_name,
                                            'due_date': due_date,
                                            'priority': priority,
@@ -175,9 +191,6 @@ if __name__ == "__main__":
     # app.config['Testing'] = True
     #Use of debug toolbar
     DebugToolbarExtension(app)
-
-    #Run app locally (simple)
-    app.run(host='0.0.0.0')
 
     #Run app locally (full)
     #Points to port to use and turns on debugger
