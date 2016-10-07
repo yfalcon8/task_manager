@@ -12,7 +12,7 @@ from jinja2 import StrictUndefined
 # Flask: A class that we import. An instance of this class will be the
 # WSGI application.
 
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, url_for
 
 #Use toolbar for debugging
 from flask_debugtoolbar import DebugToolbarExtension
@@ -113,6 +113,10 @@ def login_required(f):
 ###################### Core Routes ##########################
 
 ################ Render information on goals and tasks from Model #############
+@app.route('/')
+def landing():
+
+    return render_template("landing.html")
 
 
 @app.route('/goals/<int:user_id>', methods=['GET'])
@@ -147,6 +151,7 @@ def make_new_task(task_name, due_date, priority, date_added, open_close_status, 
 
     QUERY = """INSERT INTO Task (task_name, due_date, priority, date_added, open_close_status)
                VALUES (:task_name, :due_date, :priority, :date_added, :open_close_status)"""
+
     db_cursor = db.session.execute(QUERY, {'task_name': task_name,
                                            'due_date': due_date,
                                            'priority': priority,
@@ -176,8 +181,6 @@ if __name__ == "__main__":
     #Use of debug toolbar
     DebugToolbarExtension(app)
 
-    #Run app locally (simple)
-    # app.run(host='0.0.0.0')
 
     #Run app locally (full)
     #Points to port to use and turns on debugger
