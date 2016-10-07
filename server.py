@@ -6,7 +6,6 @@
 
 #Access local env variables
 import os
-import sys
 
 from jinja2 import StrictUndefined
 
@@ -15,11 +14,11 @@ from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, request, flash, redirect, session
 
-# Use toolbar for debugging
-# from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, User, Goal, Task, Places
-
+#Use toolbar for debugging
 from flask_debugtoolbar import DebugToolbarExtension
+from model import connect_to_db, db, User, Goal, Task
+
+from functools import wraps
 
 # Instantiates Flask and "__name__" informs Flask where to find files.
 # Instantiates Flask. "__name__" is a special Python variable for the name of
@@ -27,70 +26,19 @@ from flask_debugtoolbar import DebugToolbarExtension
 # templates, static files, and so on.
 app = Flask(__name__, static_url_path='/static')
 
-# Set a secret key to enable the flask session cookies and the debug toolbar
+#Set a secret key to enable the flask session cookies and the debug toolbar
 app.config['SECRET_KEY'] = os.environ.get("FLASK_SECRET_KEY", "seKriTz")
 
-#Raises an error when an undefined variable is used in Jinja2
-app.jinja_env.undefined = StrictUndefined
-#Prevents the need to restart server when HTML/CSS is changed
-
+# Prevents the need to restart server when HTML/CSS is changed.
 app.jinja_env.auto_reload = True
 
+# Raises an error when an undefined variable is used in Jinja2.
+app.jinja_env.undefined = StrictUndefined
 
-###################### Core Routes ##########################
-
-################ Render information on goals and tasks from Model #############
-
-@app.route('/goals/<int:user_id>', methods=['GET'])
-@login_form_required
-def render_goals():
-    """Queries DB to render the user's goals and takes them to goals.html"""
-
-    goals = db.session.query(Goal.active_goals).all()
-    description = db.session.query(Goal.description).all()
-
-    return render_template("goals.html",
-                           active_goals=goals,
-                           description=description)
-
-
-@app.route('/tasks/<int:user_id>', methods=['GET'])
-@login_form_required
-def render_tasks():
-    """Queries DB for user's tasks and takes them to tasks.html"""
-
-    tasks = db.session.query(Task.task_name).all()
-    due_date = db.session.query(Task.due_date).all()
-
-    return render_template("tasks.html",
-                           tasks=tasks,
-                           due_date=due_date)
-
-###################### Core Routes ##########################
-
-@app.route('/')
-def index():
-    """Homepage."""
-
-    return render_template("landing.html")
-
-@login_form_required
-def make_new_task(task_name, due_date, priority, date_added, open_close_status, task_frequency):
-    """Add a new task to the DB"""
-
-    QUERY = """INSERT INTO Task (task_name, due_date, priority, date_added, open_close_status)
-               VALUES (:task_name, :due_date, :priority, :date_added, :open_close_status)"""
-    db_cursor = db.session.execute(QUERY, {'task_name': task_name,
-                                           'due_date': due_date,
-                                           'priority': priority,
-                                           'date_added': date_added,
-                                           'open_close_status': open_close_status})
-
-    db.session.commit()
-
-    print "Successfully added task: {}".format(task_name)
 
 ################ Login/out Registration #####################
+
+
 @app.route("/go_register")
 def register_page():
     """Send to registration form"""
@@ -119,9 +67,6 @@ def register_form():
 
     #Send confirmation msg and back to home page
     flash("Welcome, new user. Let's get things done!")
-
-    flash("Welcome, new user. Wanna get things done?")
-
     return redirect("/")
 
 
@@ -133,11 +78,7 @@ def login_form():
     username = request.form.get("username")
     password = request.form.get("password")
 
-
     # Do these credentials align within the database?
-
-    #Do these credentials align within the database?
-
     uq = User.query
     user_object = uq.filter_by(email=username).first()
     if user_object.email == username and user_object.password == password:
@@ -155,10 +96,66 @@ def login_form():
 def logout_form():
     """Process logout form"""
 
-
     # Remove session and notify user
+    session.clear()
+    flash("Logged out. Don't be gone for too long!")
+    return redirect("/")
 
-    # Remove session and notify user
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if g.user is None:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
+###################### Core Routes ##########################
+
+################ Render information on goals and tasks from Model #############
+
+
+@app.route('/goals/<int:user_id>', methods=['GET'])
+@login_required
+def render_goals():
+    """Queries DB to render the user's goals and takes them to goals.html"""
+
+    goals = db.session.query(Goal.active_goals).all()
+    description = db.session.query(Goal.description).all()
+
+    return render_template("goals.html",
+                           active_goals=goals,
+                           description=description)
+
+
+@app.route('/tasks/<int:user_id>', methods=['GET'])
+@login_required
+def render_tasks():
+    """Queries DB for user's tasks and takes them to tasks.html"""
+
+    tasks = db.session.query(Task.task_name).all()
+    due_date = db.session.query(Task.due_date).all()
+
+    return render_template("tasks.html",
+                           tasks=tasks,
+                           due_date=due_date)
+
+
+@login_required
+def make_new_task(task_name, due_date, priority, date_added, open_close_status, task_frequency):
+    """Add a new task to the DB"""
+
+    QUERY = """INSERT INTO Task (task_name, due_date, priority, date_added, open_close_status)
+               VALUES (:task_name, :due_date, :priority, :date_added, :open_close_status)"""
+    db_cursor = db.session.execute(QUERY, {'task_name': task_name,
+                                           'due_date': due_date,
+                                           'priority': priority,
+                                           'date_added': date_added,
+                                           'open_close_status': open_close_status})
+
+    db.session.commit()
+
+    print "Successfully added task: {}".format(task_name)
 
 
 ################### Helper Functions #######################
@@ -167,15 +164,17 @@ def logout_form():
 if __name__ == "__main__":
 
     connect_to_db(app)
+
     #Create tables from models.py
     db.create_all(app=app)
+
     #Set debug=True in order to invoke the DebugToolbarExtension
-    # app.debug = True
+    app.debug = True
 
     # app.config['TRAP_HTTP_EXCEPTIONS'] = True
     # app.config['Testing'] = True
-    # Use of debug toolbar
-    # DebugToolbarExtension(app)
+    #Use of debug toolbar
+    DebugToolbarExtension(app)
 
     #Run app locally (simple)
     app.run(host='0.0.0.0')
