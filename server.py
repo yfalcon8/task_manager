@@ -177,7 +177,7 @@ if __name__ == "__main__":
     DebugToolbarExtension(app)
 
     #Run app locally (simple)
-    app.run(host='0.0.0.0')
+    # app.run(host='0.0.0.0')
 
     #Run app locally (full)
     #Points to port to use and turns on debugger
