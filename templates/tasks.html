@@ -9,9 +9,25 @@
     <div class="row">
         <div class="col-sm-3 col-lg-2" id="left_bar">
             <nav class="navbar navbar-default navbar-fixed-side">
-                <button id="add_task">Add Task</button><br>
-                <button id="complete_task">Mark Task Complete</button><br>
-                <button id="delete_task">Delete Task</button><br>
+                <button id="add_task" type="submit">Add Task</button><br>
+                <script type="text/javascript">
+                //make an ajax call that shows the task is added
+
+                //when the button w the id add task is clicked, an alert box tells the user
+                $("#add_task").on("click",  function(){
+                    alert("Task is added")
+                }
+            );
+                </script>
+                <button id="complete_task" type="submit">Mark Task Complete</button><br>
+                <script type="text/javascript">
+                //When the button is clicked the user is alerted that their task is marked complete
+                $("complete_task").on("click", function() {
+                    alert("Marked Task Complete")
+                }
+            );
+                </script>
+                <button id="delete_task" type="submit">Delete Task</button><br>
             </nav>
         </div>
 
