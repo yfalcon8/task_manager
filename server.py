@@ -1,48 +1,37 @@
 """Server file for Task Manager."""
 
+#######################
+#### Configuration ####
+#######################
+
+#Access local env variables
+import os
+
 from jinja2 import StrictUndefined
 
 # Flask: A class that we import. An instance of this class will be the
 # WSGI application.
 
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, request, flash, redirect, session
 
-#######################
-#### Configuration ####
-#######################
+#Use toolbar for debugging
+# from flask_debugtoolbar import DebugToolbarExtension
+from model import connect_to_db, db, User, Goal, Task
 
+# Instantiates Flask and "__name__" informs Flask where to find files.
 # Instantiates Flask. "__name__" is a special Python variable for the name of
 # the current module. This is needed so that Flask knows where to look for
 # templates, static files, and so on.
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
-# Raises an error when an undefined variable is used in Jinja2.
-app.jinja_env.undefined = StrictUndefined
+#Set a secret key to enable the flask session cookies and the debug toolbar
+app.config['SECRET_KEY'] = os.environ.get("FLASK_SECRET_KEY", "seKriTz")
 
 # Prevents the need to restart server when HTML/CSS is changed.
 app.jinja_env.auto_reload = True
 
-#Import necessary modules, etc.
-#Access local env variables
-import os
-
-#Utilize Jinja for HTML templates
-from jinja2 import StrictUndefined
-#Utilize Flask libraries
-from flask import Flask, render_template, request, flash, redirect, session, url_for, jsonify
-
-#Use toolbar for debugging
-# from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, User
-
-#Instantiates Flask and "__name__" informs Flask where to find files
-app = Flask(__name__, static_url_path='/static')
-#Set a secret key to enable the flask session cookies and the debug toolbar
-app.config['SECRET_KEY'] = os.environ.get("FLASK_SECRET_KEY", "seKriTz")
-#Raises an error when an undefined variable is used in Jinja2
+# Raises an error when an undefined variable is used in Jinja2.
 app.jinja_env.undefined = StrictUndefined
-#Prevents the need to restart server when HTML/CSS is changed
-app.jinja_env.auto_reload = True
 
 
 ###################### Core Routes ##########################
@@ -133,7 +122,7 @@ def login_form():
     username = request.form.get("username")
     password = request.form.get("password")
 
-    #Do these credentials align within the database?
+    # Do these credentials align within the database?
     uq = User.query
     user_object = uq.filter_by(email=username).first()
     if user_object.email == username and user_object.password == password:
@@ -151,7 +140,7 @@ def login_form():
 def logout_form():
     """Process logout form"""
 
-    #Remove session and notify user
+    # Remove session and notify user
     session.clear()
     flash("Logged out. Don't be gone for too long!")
     return redirect("/")

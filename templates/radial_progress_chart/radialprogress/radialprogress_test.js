@@ -113,7 +113,7 @@ function initialize() {
             .on("mouseover",onMouseOver)    // mouseover callback - all viz components issue these events
             .on("mouseout",onMouseOut)      // mouseout callback - all viz components issue these events
             .on("click",onClick);           // mouseout callback - all viz components issue these events
-    })
+    });
 
     //
     // Now we set some unique properties for all three components to demonstrate the different settings.
@@ -129,13 +129,13 @@ function initialize() {
     vizs[1]
         .startAngle(210)
         .endAngle(150)
-        .arcThickness(.07)
+        .arcThickness(.12)
         .label(function (d,i) { return d3.format("$,.2f")(d); });
 
     vizs[2]
         .startAngle(180)
         .endAngle(180)
-        .arcThickness(.04)
+        .arcThickness(.12)
         .label(function (d,i) { return d3.format(".0f")(d) + "%"; });
 
     //We use this function to size the components based on the selected value from the RadiaLProgressTest.html page.
@@ -150,19 +150,19 @@ function initialize() {
             })
             .start();
         reels.push(showReel);
-    })
+    });
 
     d3.select("body").on("mousedown.reel",function () {
         //Stop show reel
-        reels.forEach(function (reel) { reel.stop() })
+        reels.forEach(function (reel) { reel.stop(); });
         //Remove event listener
         d3.select("body").on("mousedown.reel",null);
-    })
+    });
 
 
 }
 
-//Here we want to animate the label value by capturin the tween event
+//Here we want to animate the label value by capturing the tween event
 //that occurs when the component animates the value arcs.
 function onTween(viz,i) {
     viz.selection().selectAll(".vz-radial_progress-label")
@@ -194,7 +194,7 @@ function changeSkin(val) {
     themes.forEach(function (theme,i) {
         //If the user selects "none" for the skin we need to tell the theme to release the component and clear
         //any applied styles.
-        if (val == "Neon") {
+        if (val == "none") {
             theme.release();
             vizs[i].update();
         }
