@@ -1,16 +1,13 @@
 """Models and database functions for Task Manager project."""
 
- 
 from flask_sqlalchemy import SQLAlchemy
- 
+
 db = SQLAlchemy()
 
 import datetime
 
 
-
 ##############################################################################
-# Model definitions
 class User(db.Model):
     """User of website."""
 
@@ -26,22 +23,21 @@ class User(db.Model):
     time_zone = db.Column(db.String(25), nullable=True)
     phone_number = db.Column(db.Integer, nullable=True)
 
+    # Define relationship tasks table
+    tasks = db.relationship("Task",
+                            backref=db.backref("users"))
+
+    # Define relationship goal table
+    goal = db.relationship("Goal",
+                           backref=db.backref("users"))
+
     def __repr__(self):
 
-     """Provide helpful representation when printed."""
+        """Provide helpful representation when printed."""
 
-    return "<User user_id=%s username=%s email=%s>" % (self.user_id,
-                                               self.username, self.email)
-
-    #Define relationship tasks table
-    tasks = db.relationship("Task",
-                         backref=db.backref("users"))
-
-    #Define relationship goal table
-    goal = db.relationship("Goal",
-                               backref=db.backref("users"))
-
-
+        return "<User user_id=%s username=%s email=%s>" % (self.user_id,
+                                                           self.username,
+                                                           self.email)
 
     @classmethod
     def create_user(cls, email, username, password):
@@ -63,35 +59,10 @@ class User(db.Model):
         else:
             return False
 
-
-
-
-    def check_by_userid(cls,user_id):
+    def check_by_userid(cls, user_id):
         """Search user table by user_id"""
 
         return cls.query.filter(cls.user_id == user_id).one()
-
-
-
-
-class Goal(db.Model):
-     """Goals for an individual user of website."""
-
-
-    __tablename__ = "goals"
-
-    goal_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    description = db.Column(db.Text, nullable=False)
-    date_started = db.Column(db.DateTime(timezone=True),
-                          nullable=False, default=make_timestamp)   #UTC timezone date/time stamp.
-    active_goal = db.Column(db.Boolean, nullable=False, default=True) #may not need this in case 
-    time_toachieve = db.Column(db.String(50), nullable=False) #expected response month ,day, year, quarter, 6months
-    goalcat_name= db.Column(db.String(50), nullable=False) #as dropdown in main screen
-
-
-    user = db.relationship('User', backref='goals')
-
 
 
 class Goal(db.Model):
@@ -102,14 +73,27 @@ class Goal(db.Model):
     goal_id = db.Column(db.Integer,
                         primary_key=True,
                         autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    description = db.Column(db.Text, nullable=False)
-    date_started = db.Column(db.DateTime(timezone=True), nullable=False, default=make_timestamp)  # UTC timezone date/time stamp.
-    active_goal = db.Column(db.Boolean, nullable=False, default=True)
-    time_toachieve = db.Column(db.String(50), nullable=False)  # expected response month ,day, year, quarter, 6months
 
-    user = db.relationship('User', backref='goals')
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey('users.user_id'))
 
+    description = db.Column(db.Text,
+                            nullable=False)
+
+    created_date = db.Column(db.DateTime,
+                             default=datetime.datetime.now())
+
+    active_goal = db.Column(db.Boolean,
+                            nullable=False,
+                            default=True)  # may not need this in case
+
+    time_toachieve = db.Column(db.String(50),
+                               nullable=False)  # expected response month ,day, year, quarter, 6months
+
+    goalcat_name = db.Column(db.String(50),
+                             nullable=False)  # as dropdown in main screen
+
+    user = db.relationship("User", backref=db.backref("relationships"))
 
     @classmethod
     def check_by_user_id(cls, user_id):
@@ -127,9 +111,8 @@ class Goal(db.Model):
 
 
 
-
 class Task(db.Model):
-    """Tasks for goals """
+    """Tasks for tasks """
 
     __tablename__ = "tasks"
 
@@ -183,11 +166,7 @@ class Reminders(db.Model):
 
     def __repr__(self):
 
-
         return "<reminder_id=%s goal_id=%>" % (self.reminder_id, self.goal_id)
-
-
-
 
 
 class GoalCompletion(db.Model):
@@ -197,9 +176,12 @@ class GoalCompletion(db.Model):
 
     completion_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     goal_id = db.Column(db.Integer, db.ForeignKey('goals.goal_id'))
-    marked_complete = db.Column(db.DateTime(timezone=True),
-                           nullable=True, default=make_timestamp) #UTC timezone date/time stamp.
-    user_notes = db.Column(db.Text, nullable=True) #if user wants to comment while completing a goal
+
+    marked_complete = db.Column(db.DateTime,
+                                nullable=True,
+                                default=datetime.datetime.now())
+    user_notes = db.Column(db.Text,
+                           nullable=True)  # if user wants to comment while completing a goal
 
     goal = db.relationship('Goal', backref='trackcompletion')
     user = db.relationship('User', secondary='goals', backref='trackcompletion')
@@ -268,10 +250,8 @@ class GoalCompletion(db.Model):
 
 #         return "<taskcat_id=%s taskcat_name=%s>" % (self.taskcat_id, self.taskcat_name)
 
- 
 # class GoalCategory(db.Model):
 #     """Goal categories for the user""" #this will be a static list
-   
 
 #     __tablename__ = "goalcategories"
 
@@ -288,34 +268,30 @@ class GoalCompletion(db.Model):
 
 
 ############################################################################
+# def init_app():
 
-def init_app():
+#     from server import app
 
-    from flask import Flask
-    from server import app
+#     connect_to_db(app)
+#     print "Connected to DB."
 
-    connect_to_db(app)
-    print "Connected to DB."
-
-
-def connect_to_db(app):
+def connect_to_db(app, db_uri='postgres:///task_manager'):
     """Connect the database to our Flask app."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///task_manager'
-    app.config['SQLALCHEMY_ECHO'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    # app.config['SQLALCHEMY_ECHO'] = True
     db.app = app
     db.init_app(app)
 
 
 if __name__ == "__main__":
-    #To utilize database interactively
+    """This is useful for running this module interactively. This will leave me
+    in a state of being able to work with the database directly."""
 
-    from flask import Flask
     from server import app
 
-# Need to add to db.create_all() 
+    # Need to add to db.create_all()
 
     connect_to_db(app)
     print "Connected to DB."
-
-
