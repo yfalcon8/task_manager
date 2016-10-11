@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 {% block extra_js %}
+
 <!-- Here is where the link to the JS would go once that is coded -->
 <!-- <script type="text/javascript" src="static/"></script> -->
+
 {% endblock %}
 {% block content %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script> 
 <!-- This div will be the fixed left bar for the user to click to act on the tasks that are in the "main task div" below -->
 <div class="container-fluid">
     <div class="row">
@@ -17,7 +19,7 @@
             </nav>
         </div>
 
-<!-- This div is the main div where the user will see their current tasks -->
+<!-- This is the main div where the user will see all current tasks. -->
         <div id="main_task_div" class="col-sm-9 col-lg-10">
             <!-- Content -->
             <!-- Jinja loop feed from the db the current tasks -->
@@ -36,9 +38,9 @@
                                   <option value="medium">Medium</option>
                                   <option value="low">Low</option>
                                 </select><br>
-                                How often does this task reoccur?
+                                Task Frequency
                                 <select name="task_frequency">
-                                    <option value="never">Never</option>
+                                    <option value="never">Once</option>
                                     <option value="daily">Daily</option>
                                     <option value="weekly">Weekly</option>
                                     <option value="monthly">Monthly</option>

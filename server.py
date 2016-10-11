@@ -12,7 +12,7 @@ from jinja2 import StrictUndefined
 # Flask: A class that we import. An instance of this class will be the
 # WSGI application.
 
-from flask import Flask, render_template, request, flash, redirect, session, url_for
+from flask import Flask, render_template, request, flash, redirect, session, url_for, g
 
 #Use toolbar for debugging
 from flask_debugtoolbar import DebugToolbarExtension
@@ -60,8 +60,7 @@ def register_form():
     user = User(email=email,
                 username=username,
                 password=password,
-                phone_number=phone_number,
-                )
+                phone_number=phone_number)
     db.session.add(user)
     db.session.commit()
 
@@ -102,15 +101,33 @@ def logout_form():
     return redirect("/")
 
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if g.user is None:
-            return redirect(url_for('login', next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
+# @app.before_request
+# def login_required(f):
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if g.user is None:
+#             return redirect(url_for('login', next=request.url))
+#         # return f(*args, **kwargs)
+#     return decorated_function
+
+
+# @app.before_request
+# def before_request():
+#     """pull user info from the database based on session id"""
+
+#     g.user = None
+
+#     if 'user_id' in session:
+#         try:
+#             try:
+#                 g.user = User.query.get(session['user_id'])
+#             except TypeError:  # session probably expired
+#                 pass
+#         except KeyError:
+#             pass
 
 ###################### Core Routes ##########################
+
 
 ################ Render information on goals and tasks from Model #############
 @app.route('/')
@@ -119,21 +136,29 @@ def landing():
     return render_template("landing.html")
 
 
-@app.route('/goals/<int:user_id>', methods=['GET'])
-@login_required
+@app.route('/goals', methods=['GET'])
+# @login_required
 def render_goals():
     """Queries DB to render the user's goals and takes them to goals.html"""
+
+    if Goal.check_by_user_id(user_id) is False:
+        flash("You have no goals currently! Would you like to add one?")
+        return render_template('add_goal.html')
+    else:
+
+        user = User.check_by_user_id(user_id)
+        goals = Goal.check_by_user_id(user_id)
 
     goals = db.session.query(Goal.active_goals).all()
     description = db.session.query(Goal.description).all()
 
     return render_template("goals.html",
-                           active_goals=goals,
+                           goals=goals,
                            description=description)
 
 
-@app.route('/tasks/<int:user_id>', methods=['GET'])
-@login_required
+@app.route('/tasks', methods=['GET'])
+# @login_required
 def render_tasks():
     """Queries DB for user's tasks and takes them to tasks.html"""
 
@@ -145,7 +170,7 @@ def render_tasks():
                            due_date=due_date)
 
 
-@login_required
+# @login_required
 def make_new_task(task_name, due_date, priority, date_added, open_close_status, task_frequency):
     """Add a new task to the DB"""
 

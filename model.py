@@ -213,20 +213,6 @@ class GoalCompletion(db.Model):
 #         return redirect(#FIXME #URLNAME)
 
 
-#need to add to server.py as part of displaying user task-
-# @app.route('/user/<int:user_id>')
-# def user_goals(user_id):
-#     """Display user's goals"""
-
-#     user_id = session["user_id"]
-
-#     if Goal.check_by_user_id(user_id) is False:
-#         flash("You have no goals currently! Would you like to add one!")
-#         return render_template('add_goal.html')
-#     else:
-
-#         user = User.check_by_user_id(user_id)
-         # goals = Goal.check_by_user_id(user_id)
 
 
 ############################################################################
@@ -266,12 +252,12 @@ class GoalCompletion(db.Model):
 
 
 ############################################################################
-# def init_app():
+def init_app():
 
-#     from server import app
+    from server import app
 
-#     connect_to_db(app)
-#     print "Connected to DB."
+    connect_to_db(app)
+    print "Connected to DB."
 
 def connect_to_db(app, db_uri='postgres:///task_manager'):
     """Connect the database to our Flask app."""
