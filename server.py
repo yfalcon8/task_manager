@@ -38,40 +38,37 @@ app.jinja_env.undefined = StrictUndefined
 
 ################ Login/out Registration #####################
 
-
-@app.route("/go_register")
-def register_page():
-    """Send to registration form"""
-
-    return render_template("register.html")
-
-
 @app.route("/register", methods=['POST'])
 def register_form():
     """Register user"""
 
-    #Accept data from input fields
+    # Grab user's inputted data.
+    first = request.form.get('first_name')
+    last = request.form.get('last_name')
     email = request.form.get('email')
-    username = request.form.get('username')
+    username = request.form.get('display_name')
     password = request.form.get('password')
-    phone_number = request.form.get('phone_number')
+    password_confirm = request.form.get('password_confirmation')
+
+    session['username'] = username
+    session["user_email"] = email
+    # session["user_id"] = user_id
 
     #Commit new user details to the database
     user = User(email=email,
                 username=username,
-                password=password,
-                phone_number=phone_number)
+                password=password)
     db.session.add(user)
     db.session.commit()
 
     #Send confirmation msg and back to home page
     flash("Welcome, new user. Let's get things done!")
-    return redirect("/")
+    return redirect("/landing")
 
 
 @app.route('/')
 def display_login():
-    """Homepage when a non-user visits site. Displays login form."""
+    """Homepage. Login and registration displayed."""
 
     return render_template("login.html")
 

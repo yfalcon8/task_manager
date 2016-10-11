@@ -34,9 +34,6 @@ class User(db.Model):
     time_zone = db.Column(db.String(25),
                           nullable=True)
 
-    phone_number = db.Column(db.String(15),
-                             nullable=True)
-
     # Define relationship tasks table
     tasks = db.relationship("Task",
                             backref=db.backref("users"))
