@@ -44,7 +44,7 @@ bcrypt = Bcrypt(app)
 
 @app.route("/register", methods=['POST'])
 def register_form():
-    """Register user"""
+    """Register user."""
 
     # Grab user's inputted data.
     first = request.form.get('first_name')
@@ -59,19 +59,10 @@ def register_form():
         flash("The passwords do not match. Please type again.")
         return redirect("/")
 
-    # Store new user info in session.
-    session["username"] = username
-    session["user_email"] = email
-    # session["user_id"] = user_id
-
+    # Secure the users pw before storing in database.
     pw_hash = bcrypt.generate_password_hash(password)
 
-    # encrypted = password
-    # hashed = bcrypt.hashpw(password.encode('utf-8', bcrypt.gensalt()))
-
-    print pw_hash
-
-    #Commit new user details to the database
+    # Commit new user to database.
     user = User(first_name=first,
                 last_name=last_name,
                 email=email,
@@ -81,7 +72,12 @@ def register_form():
     db.session.add(user)
     db.session.commit()
 
-    #Send confirmation msg and back to home page
+    # Store new user info in session.
+    session["username"] = username
+    session["user_email"] = email
+    # session["user_id"] = user_id
+
+    # Send confirmation msg and back to home page
     flash("Welcome, new user. Let's get things done!")
     return redirect("/landing")
 
