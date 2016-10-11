@@ -20,6 +20,8 @@ from model import connect_to_db, db, User, Goal, Task
 
 from functools import wraps
 
+from flask.ext.bcrypt import Bcrypt
+
 # Instantiates Flask and "__name__" informs Flask where to find files.
 # Instantiates Flask. "__name__" is a special Python variable for the name of
 # the current module. This is needed so that Flask knows where to look for
@@ -35,6 +37,8 @@ app.jinja_env.auto_reload = True
 # Raises an error when an undefined variable is used in Jinja2.
 app.jinja_env.undefined = StrictUndefined
 
+bcrypt = Bcrypt(app)
+
 
 ################ Login/out Registration #####################
 
@@ -44,24 +48,36 @@ def register_form():
 
     # Grab user's inputted data.
     first = request.form.get('first_name')
-    last = request.form.get('last_name')
+    last_name = request.form.get('last_name')
     email = request.form.get('email')
     username = request.form.get('display_name')
     password = request.form.get('password')
     password_confirm = request.form.get('password_confirmation')
 
+    # Make sure 'password' and 'password_confirm' match.
     if password != password_confirm:
         flash("The passwords do not match. Please type again.")
         return redirect("/")
 
+    # Store new user info in session.
     session["username"] = username
     session["user_email"] = email
     # session["user_id"] = user_id
 
+    pw_hash = bcrypt.generate_password_hash(password)
+
+    # encrypted = password
+    # hashed = bcrypt.hashpw(password.encode('utf-8', bcrypt.gensalt()))
+
+    print pw_hash
+
     #Commit new user details to the database
-    user = User(email=email,
+    user = User(first_name=first,
+                last_name=last_name,
+                email=email,
                 username=username,
-                password=password)
+                password=pw_hash)
+
     db.session.add(user)
     db.session.commit()
 

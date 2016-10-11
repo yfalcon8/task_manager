@@ -17,6 +17,12 @@ class User(db.Model):
                         autoincrement=True,
                         primary_key=True)
 
+    first_name = db.Column(db.String(30),
+                           nullable=False)
+
+    last_name = db.Column(db.String(30),
+                          nullable=False)
+
     username = db.Column(db.String(64),
                          unique=True,
                          nullable=False)
@@ -49,17 +55,6 @@ class User(db.Model):
         return "<User user_id=%s username=%s email=%s>" % (self.user_id,
                                                            self.username,
                                                            self.email)
-
-    @classmethod
-    def create_user(cls, email, username, password):
-        """Adding a new user to the db"""
-
-        new_user = cls(email=email, username=username, password=password)
-
-        db.session.add(new_user)
-        db.session.commit()
-
-        return
 
     @classmethod
     def check_by_email(cls, email):

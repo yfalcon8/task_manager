@@ -1,6 +1,6 @@
-INSERT INTO users (username, password, profile_img, email, time_zone)
-VALUES ('Minnie', 'MouseGal', 'static/img/minnie.jpg', 'minnie@mouse.purr', 'PST'),
-('LadyFlash', 'PowerfulLady', 'static/img/ladyflash.jpg', 'lady@flash.pow', 'PST');
+INSERT INTO users (username, first_name, last_name, password, profile_img, email, time_zone)
+VALUES ('Minnie', 'Minnie', 'Mouse', 'MouseGal', 'static/img/minnie.jpg', 'minnie@mouse.purr', 'PST'),
+('LadyFlash', 'Lady', 'Flash', 'PowerfulLady', 'static/img/ladyflash.jpg', 'lady@flash.pow', 'PST');
 
 INSERT INTO tasks (task_name, due_date, priority, open_close_status, task_frequency, taskcat_name)
 VALUES ('Do laundry', '10/31/16', 5, 1, 'weekly', 'personal');
