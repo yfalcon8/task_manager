@@ -69,26 +69,34 @@ def register_form():
     return redirect("/")
 
 
+@app.route('/')
+def display_login():
+    """Homepage when a non-user visits site. Displays login form."""
+
+    return render_template("login.html")
+
+
 @app.route('/login', methods=['POST'])
 def login_form():
-    """Process login form"""
+    """Process login form."""
 
-    #Accept data from input fields
-    username = request.form.get("username")
+    # Grab the users input.
+    email = request.form.get("email")
     password = request.form.get("password")
 
-    # Do these credentials align within the database?
+    # Check that the user exists.
     uq = User.query
-    user_object = uq.filter_by(email=username).first()
-    if user_object.email == username and user_object.password == password:
+    user_object = uq.filter_by(email=email).first()
+
+    if user_object.email == email and user_object.password == password:
         flash("Hi again!")
         session["user_email"] = user_object.email
         session["user_id"] = user_object.user_id
-        user_id = user_object.user_id
+        session["username"] = user_object.username
+
+        return redirect("/landing")
     else:
         flash("Oops! Email / Password mismatch: Try again.")
-
-    return redirect("/")
 
 
 @app.route('/logout', methods=['POST'])
@@ -98,7 +106,7 @@ def logout_form():
     # Remove session and notify user
     session.clear()
     flash("Logged out. Don't be gone for too long!")
-    return redirect("/")
+    return redirect("/login")
 
 
 # @app.before_request
@@ -130,10 +138,15 @@ def logout_form():
 
 
 ################ Render information on goals and tasks from Model #############
-@app.route('/')
+@app.route('/landing')
 def landing():
+    """Main page after login/registration."""
 
-    return render_template("landing.html")
+    username = session['username']
+    print "I'm in the landing route! username={}".format(username)
+
+    return render_template("landing.html",
+                           username=username)
 
 
 @app.route('/goals', methods=['GET'])

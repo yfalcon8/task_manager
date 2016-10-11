@@ -16,12 +16,26 @@ class User(db.Model):
     user_id = db.Column(db.Integer,
                         autoincrement=True,
                         primary_key=True)
-    username = db.Column(db.String(64), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-    profile_img = db.Column(db.String(200), nullable=True)
-    email = db.Column(db.String(50), unique=True, nullable=False)
-    time_zone = db.Column(db.String(25), nullable=True)
-    phone_number = db.Column(db.String(15), nullable=True)
+
+    username = db.Column(db.String(64),
+                         unique=True,
+                         nullable=False)
+
+    password = db.Column(db.String(200),
+                         nullable=False)
+
+    profile_img = db.Column(db.String(200),
+                            nullable=True)
+
+    email = db.Column(db.String(64),
+                      unique=True,
+                      nullable=False)
+
+    time_zone = db.Column(db.String(25),
+                          nullable=True)
+
+    phone_number = db.Column(db.String(15),
+                             nullable=True)
 
     # Define relationship tasks table
     tasks = db.relationship("Task",
@@ -145,8 +159,8 @@ class Task(db.Model):
     def closed_tasks():
         return db.session.query(Task).filter_by(open_close_status='0').order_by(Task.due_date.asc())
 
-
-    user = db.relationship('User', backref='tasks')
+    # FIXME: Receiving an ArgumentError: Error creating backref 'tasks' on relationship 'Task.user': property of that name exists on mapper 'Mapper|User|users'
+    # user = db.relationship('User', backref='tasks')
 
 
 class Reminders(db.Model):
