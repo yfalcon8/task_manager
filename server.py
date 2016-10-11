@@ -50,7 +50,11 @@ def register_form():
     password = request.form.get('password')
     password_confirm = request.form.get('password_confirmation')
 
-    session['username'] = username
+    if password != password_confirm:
+        flash("The passwords do not match. Please type again.")
+        return redirect("/")
+
+    session["username"] = username
     session["user_email"] = email
     # session["user_id"] = user_id
 
