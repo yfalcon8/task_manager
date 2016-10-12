@@ -1,4 +1,4 @@
-# <<<<<<< HEAD
+## <<<<<<< HEAD
 from jinja2 import StrictUndefined
 
 # Flask: A class that we import. An instance of this class will be the
@@ -33,6 +33,7 @@ app.jinja_env.auto_reload = True
 import jinja2
 import os
 import sys
+import quickstart
 
 #Utilize Jinja for HTML templates
 from jinja2 import StrictUndefined
@@ -41,7 +42,7 @@ from flask import Flask, render_template, request, flash, redirect, session, url
 
 #Use toolbar for debugging
 # from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, Places
+from model import connect_to_db, db
 
 #Instantiates Flask and "__name__" informs Flask where to find files
 app = Flask(__name__, static_url_path='/static')
@@ -57,114 +58,121 @@ app.jinja_env.auto_reload = True
 
 ################ Render information on goals and tasks from Model #############
 
-@app.route('/goals/<int:user_id>', methods=['GET'])
-@login_form_required
-def render_goals():
-    """Queries DB to render the user's goals and takes them to goals.html"""
+# @app.route('/goals/<int:user_id>', methods=['GET'])
+# # @login_form_required
+# def render_goals():
+#     """Queries DB to render the user's goals and takes them to goals.html"""
 
-    goals = db.session.query(Goal.active_goals).all()
-    description = db.session.query(Goal.description).all()
+#     goals = db.session.query(Goal.active_goals).all()
+#     description = db.session.query(Goal.description).all()
 
-    return render_template("goals.html",
-                           active_goals=goals,
-                           description=description)
-
-
-@app.route('/tasks/<int:user_id>', methods=['GET'])
-@login_form_required
-def render_tasks():
-    """Queries DB for user's tasks and takes them to tasks.html"""
-
-    tasks = db.session.query(Task.task_name).all()
-    due_date = db.session.query(Task.due_date).all()
-
-    return render_template("tasks.html",
-                           tasks=tasks,
-                           due_date=due_date)
+#     return render_template("goals.html",
+#                            active_goals=goals,
+#                            description=description)
 
 
-@login_form_required
-def make_new_task(task_name, due_date, priority, date_added, open_close_status, task_frequency):
-    """Add a new task to the DB"""
+# @app.route('/tasks/<int:user_id>', methods=['GET'])
+# # @login_form_required
+# def render_tasks():
+#     """Queries DB for user's tasks and takes them to tasks.html"""
 
-    QUERY = """INSERT INTO Task (task_name, due_date, priority, date_added, open_close_status)
-               VALUES (:task_name, :due_date, :priority, :date_added, :open_close_status)"""
-    db_cursor = db.session.execute(QUERY, {'task_name': task_name,
-                                           'due_date': due_date,
-                                           'priority': priority,
-                                           'date_added': date_added,
-                                           'open_close_status': open_close_status})
+#     tasks = db.session.query(Task.task_name).all()
+#     due_date = db.session.query(Task.due_date).all()
 
-    db.session.commit()
-
-    print "Successfully added task: {}".format(task_name)
-
-################ Login/out Registration #####################
+#     return render_template("tasks.html",
+#                            tasks=tasks,
+#                            due_date=due_date)
 
 
-@app.route("/go_register")
-def register_page():
-    """Send to registration form"""
+# # @login_form_required
+# # def make_new_task(task_name, due_date, priority, date_added, open_close_status, task_frequency):
+# #     """Add a new task to the DB"""
 
-    return render_template("register.html")
+# #     QUERY = """INSERT INTO Task (task_name, due_date, priority, date_added, open_close_status)
+# #                VALUES (:task_name, :due_date, :priority, :date_added, :open_close_status)"""
+# #     db_cursor = db.session.execute(QUERY, {'task_name': task_name,
+# #                                            'due_date': due_date,
+# #                                            'priority': priority,
+# #                                            'date_added': date_added,
+# #                                            'open_close_status': open_close_status})
 
+#     db.session.commit()
 
-@app.route("/register", methods=['POST'])
-def register_form():
-    """Register user"""
+#     print "Successfully added task: {}".format(task_name)
 
-    #Accept data from input fields
-    email = request.form.get('email')
-    username = request.form.get('username')
-    password = request.form.get('password')
-    phone_number = request.form.get('phone_number')
-
-    #Commit new user details to the database
-    user = User(email=email,
-                username=username,
-                password=password,
-                phone_number=phone_number,
-                )
-    db.session.add(user)
-    db.session.commit()
-
-    #Send confirmation msg and back to home page
-    flash("Welcome, new user. Let's get things done!")
-    return redirect("/")
+# ################ Login/out Registration #####################
 
 
-@app.route('/login', methods=['POST'])
-def login_form():
-    """Process login form"""
+# @app.route("/go_register")
+# def register_page():
+#     """Send to registration form"""
 
-    #Accept data from input fields
-    username = request.form.get("username")
-    password = request.form.get("password")
-
-    #Do these credentials align within the database?
-    uq = User.query
-    user_object = uq.filter_by(email=username).first()
-    if user_object.email == username and user_object.password == password:
-        flash("Hi again!")
-        session["user_email"] = user_object.email
-        session["user_id"] = user_object.user_id
-        user_id = user_object.user_id
-    else:
-        flash("Oops! Email / Password mismatch: Try again.")
-
-    return redirect("/")
+#     return render_template("register.html")
 
 
-@app.route('/logout', methods=['POST'])
-def logout_form():
-    """Process logout form"""
+# @app.route("/register", methods=['POST'])
+# def register_form():
+#     """Register user"""
 
-    #Remove session and notify user
-    session.clear()
-    flash("Logged out. Don't be gone for too long!")
-    return redirect("/")
+#     #Accept data from input fields
+#     email = request.form.get('email')
+#     username = request.form.get('username')
+#     password = request.form.get('password')
+#     phone_number = request.form.get('phone_number')
+
+#     #Commit new user details to the database
+#     user = User(email=email,
+#                 username=username,
+#                 password=password,
+#                 phone_number=phone_number,
+#                 )
+#     db.session.add(user)
+#     db.session.commit()
+
+#     #Send confirmation msg and back to home page
+#     flash("Welcome, new user. Let's get things done!")
+#     return redirect("/")
 
 
+# @app.route('/login', methods=['POST'])
+# def login_form():
+#     """Process login form"""
+
+#     #Accept data from input fields
+#     username = request.form.get("username")
+#     password = request.form.get("password")
+
+#     #Do these credentials align within the database?
+#     uq = User.query
+#     user_object = uq.filter_by(email=username).first()
+#     if user_object.email == username and user_object.password == password:
+#         flash("Hi again!")
+#         session["user_email"] = user_object.email
+#         session["user_id"] = user_object.user_id
+#         user_id = user_object.user_id
+#     else:
+#         flash("Oops! Email / Password mismatch: Try again.")
+
+#     return redirect("/")
+
+
+# @app.route('/logout', methods=['POST'])
+# def logout_form():
+#     """Process logout form"""
+
+#     #Remove session and notify user
+#     session.clear()
+#     flash("Logged out. Don't be gone for too long!")
+#     return redirect("/")
+
+@app.route('/googlecalendar', methods=['GET'])
+def google_map():
+    return render_template("index-test.html")
+
+@app.route('/testing')
+def test_page():
+    return render_template("testpage.html")
+    
 ################### Helper Functions #######################
 
 # Listening or requests
@@ -183,6 +191,8 @@ if __name__ == "__main__":
 
     #Run app locally (simple)
     app.run(host='0.0.0.0')
+    app.config['SQLAlCHEMY_TRACK_MODIFICATIONS'] = True
+
 
     #Run app locally (full)
     #Points to port to use and turns on debugger
@@ -191,4 +201,4 @@ if __name__ == "__main__":
     #Run app via Heroku
     # PORT = int(os.environ.get("PORT", 5000))
     # app.run(host="0.0.0.0", port=PORT)
->>>>>>> rshen91/rachel
+#>>>>>>> rshen91/rachel

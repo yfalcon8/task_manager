@@ -6,9 +6,17 @@ db = SQLAlchemy()
 
 import datetime
 
+# from datetime import datetime
+
 
 ##############################################################################
 # Model definitions
+
+
+def make_timestamp():
+    return datetime.now()
+
+
 class User(db.Model):
     """User of website."""
 
