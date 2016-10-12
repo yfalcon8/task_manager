@@ -95,13 +95,13 @@ def login_form():
 
     # Grab the users input.
     email = request.form.get("email")
-    password = request.form.get("password")
+    password = bcrypt.generate_password_hash(request.form.get("password"))
 
     # Check that the user exists.
     uq = User.query
     user_object = uq.filter_by(email=email).first()
 
-    if user_object.email == email and user_object.password == password:
+    if user_object and bcrypt.check_password_hash(password, user_object.password):
         flash("Hi again!")
         session["user_email"] = user_object.email
         session["user_id"] = user_object.user_id
@@ -110,16 +110,17 @@ def login_form():
         return redirect("/landing")
     else:
         flash("Oops! Email / Password mismatch: Try again.")
+        return redirect("/")
 
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout')
 def logout_form():
     """Process logout form"""
 
     # Remove session and notify user
     session.clear()
     flash("Logged out. Don't be gone for too long!")
-    return redirect("/login")
+    return render_template("logout.html")
 
 
 # @app.before_request
