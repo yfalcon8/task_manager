@@ -12,13 +12,11 @@ from jinja2 import StrictUndefined
 # Flask: A class that we import. An instance of this class will be the
 # WSGI application.
 
-from flask import Flask, render_template, request, flash, redirect, session, url_for, g
+from flask import Flask, render_template, request, flash, redirect, session
 
 #Use toolbar for debugging
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Goal, Task
-
-from functools import wraps
 
 from flask.ext.bcrypt import Bcrypt
 
@@ -73,9 +71,11 @@ def register_form():
     db.session.commit()
 
     # Store new user info in session.
+    user_id = db.session.query(User.id).filter_by(email=email).first()[0]
+    session["user_id"] = user_id
+
     session["username"] = username
     session["user_email"] = email
-    # session["user_id"] = user_id
 
     # Send confirmation msg and back to home page
     flash("Welcome, new user. Let's get things done!")
@@ -117,36 +117,11 @@ def login_form():
 def logout_form():
     """Process logout form"""
 
-    # Remove session and notify user
+    # Remove user from session.
     session.clear()
     flash("Logged out. Don't be gone for too long!")
     return render_template("logout.html")
 
-
-# @app.before_request
-# def login_required(f):
-#     @wraps(f)
-#     def decorated_function(*args, **kwargs):
-#         if g.user is None:
-#             return redirect(url_for('login', next=request.url))
-#         # return f(*args, **kwargs)
-#     return decorated_function
-
-
-# @app.before_request
-# def before_request():
-#     """pull user info from the database based on session id"""
-
-#     g.user = None
-
-#     if 'user_id' in session:
-#         try:
-#             try:
-#                 g.user = User.query.get(session['user_id'])
-#             except TypeError:  # session probably expired
-#                 pass
-#         except KeyError:
-#             pass
 
 ###################### Core Routes ##########################
 
@@ -163,8 +138,7 @@ def landing():
                            username=username)
 
 
-@app.route('/goals', methods=['GET'])
-# @login_required
+@app.route('/goals')
 def render_goals():
     """Queries DB to render the user's goals and takes them to goals.html"""
 
@@ -184,12 +158,13 @@ def render_goals():
                            description=description)
 
 
-@app.route('/tasks', methods=['GET'])
-# @login_required
+@app.route('/tasks')
 def render_tasks():
     """Queries DB for user's tasks and takes them to tasks.html"""
 
-    tasks = db.session.query(Task.task_name).all()
+    user_id = session["user_id"]
+
+    tasks = db.session.query(Task.task_name).filter_by(user_id=user_id).all()
     due_date = db.session.query(Task.due_date).all()
 
     return render_template("tasks.html",
