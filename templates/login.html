@@ -41,28 +41,35 @@
                 </div>
 
                 <span class="button-checkbox">
+                    <input type="submit" class="btn btn-lg btn-success btn-block" value="Sign In">
                     <button type="button" class="btn" data-color="info">Remember Me</button>
                     <input type="checkbox" name="remember_me" id="remember_me" checked="checked" class="hidden">
-                    <a href="" class="btn btn-link pull-right">Forgot Password?</a>
+                    </br><a href="" class="btn btn-link pull-right">Forgot Password?</a>
                 </span>
 
                 <hr class="colorgraph">
-                <div class="row">
-                    <div class="col-xs-6 col-sm-6 col-md-6">
-                        <input type="submit" class="btn btn-lg btn-success btn-block" value="Sign In">
-                    </div>
-                </div>
             </fieldset>
         </form>
+        <p>
+            New Users?
+            <button onclick="document.getElementById('#register').style.display='block'" data-toggle="modal" data-target="#register" class="btn btn-primary">Register</button>
+        </p>
     </div>
 </div>
 </div>
 {% endblock login %}
 
 {% block register %}
-
+<!-- Registration Modal -->
+<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="myModalLabel">Register</h4>
+            </div>
+            <div class="modal-body">
 <div class="container">
-
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
         <form role="form" action="/register" method="POST">
@@ -140,6 +147,28 @@
         </form>
     </div>
 </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <hr class="colorgraph">
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        <input type="submit" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">I Agree</button>
+            </div>
+            </div>
+            </fieldset>
+        </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</div>
+
+
+
 <!-- T&C Modal -->
 <div class="modal fade" id="register_terms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -192,6 +221,7 @@
     <!-- Bootstrap Core -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+    
     $(function(){
         $('.button-checkbox').each(function(){
             var $widget = $(this),
