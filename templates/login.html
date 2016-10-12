@@ -66,67 +66,82 @@
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
         <form role="form" action="/register" method="POST">
-            <h2>Please Sign Up <small>It's free (because it's depricated).</small></h2>
-            <hr class="colorgraph">
-
-            <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6">
-                    <div class="form-group">
-                        <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="First Name" tabindex="1">
-                    </div>
-                </div>
-
-                <div class="col-xs-12 col-sm-6 col-md-6">
-                    <div class="form-group">
-                        <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Last Name" tabindex="2">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <input type="text" name="display_name" id="display_name" class="form-control input-lg" placeholder="Display Name" tabindex="3">
-            </div>
-
-            <div class="form-group">
-                <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4">
-            </div>
-
-            <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6">
-                    <div class="form-group">
-                        <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
-                    </div>
-                </div>
-
-                <div class="col-xs-12 col-sm-6 col-md-6">
-                    <div class="form-group">
-                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password" tabindex="6">
-                    </div>
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-xs-4 col-sm-3 col-md-3">
-                    <span class="button-checkbox">
-                        <button type="button" class="btn" data-color="info" tabindex="7">I Agree</button>
-                        <input type="checkbox" name="t_and_c" id="t_and_c" class="hidden" value="1">
-                    </span>
-                </div>
-                <div class="col-xs-8 col-sm-9 col-md-9">
-                     By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="#" data-toggle="modal" data-target="#t_and_c_m">Terms and Conditions</a> set out by this site, including our Cookie Use.
-                </div>
-            </div>
             
-            <hr class="colorgraph">
-            <div class="row">
-                <div class="col-xs-12 col-md-6"><input type="submit" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
-                <div class="col-xs-12 col-md-6"><a href="#" class="btn btn-success btn-block btn-lg">Sign In</a></div>
-            </div>
+            <!-- The fieldset tag is used to group related elements in a form. -->
+            <!-- A box is drawn around the related elements. -->
+            <fieldset>
+
+                <h2>Please Sign Up <small> • It's free </br>(because it's depricated).</small></h2>
+                <hr class="colorgraph">
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="first_name" id="first_name" class="form-control input-lg" placeholder="First Name" tabindex="1">
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="last_name" id="last_name" class="form-control input-lg" placeholder="Last Name" tabindex="2">
+                        </div>
+                    </div>
+                
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="text" name="display_name" id="display_name" class="form-control input-lg" placeholder="Display Name" tabindex="3">
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4">
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="phone" name="phone" id="phone" class="form-control input-lg" placeholder="Phone Number" tabindex="5">
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-lg" placeholder="Confirm Password" tabindex="6">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-4 col-sm-3 col-md-3">
+                        <span class="button-checkbox">
+                            <button type="button" class="btn" data-color="info" tabindex="7">I Agree</button>
+                        </span>
+                    </div>
+                    <div class="col-xs-8 col-sm-9 col-md-9">
+                        <p>
+                        <input type="checkbox" name="t_and_c" id="t_and_c" class="hidden" value="1">
+                         By clicking <strong class="label label-primary">Register</strong>, you agree to the <a href="#" data-toggle="modal" data-target="#register_terms">Terms and Conditions</a> set out by this site, including our Cookie Use.
+                        </p>
+                    </div>
+                </div>
+                
+                <hr class="colorgraph">
+                <div class="row">
+                    <div class="col-xs-12 col-md-6"><input type="submit" value="Register" class="btn btn-primary btn-block btn-lg" tabindex="7"></div>
+                </div>
+            </fieldset>
         </form>
     </div>
 </div>
-<!-- Modal -->
-<div class="modal fade" id="t_and_c_m" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- T&C Modal -->
+<div class="modal fade" id="register_terms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -134,13 +149,30 @@
                 <h4 class="modal-title" id="myModalLabel">Register</h4>
             </div>
             <div class="modal-body">
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique, itaque, modi, aliquam nostrum at sapiente consequuntur natus odio reiciendis perferendis rem nisi tempore possimus ipsa porro delectus quidem dolorem ad.</p>
+                <p>
+                <h2>Terms &amp; Conditions</h2></br>
+                <h4>Last updated: October 2016</h4></br>
+                    Please read these Terms and Conditions ("Terms", "Terms and Conditions") carefully before using the Task Manager website (the "Service") operated sporatically by the contributers ("us", "we", or "our"). Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users and others who access or use the Service. By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service.
+                </p>
+                <p>
+                <h3>Content</h3></br>
+                    Our Service allows users to create, edit, share, make content and otherwise make available certain information, text, graphics, videos, or other material ("Content"). You are responsible for the maintenance of your own content.
+                </p>
+                <p>
+                <h3>Links To Other Web Sites</h3></br>
+                    Our Service may contain links to thirdparty web sites or services that are not owned or controlled by us.
+                </p>
+                <p>
+                    We have no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that we shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such content, goods or services available on or through any such web sites or services.
+                </p>
+                <p>
+                <h3>Changes</h3></br>
+                        We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will not provide any notice to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.
+                </p>
+                <p>
+                <h3>Contact Us</h3></br>
+                        If you have any questions about these Terms, please contact us via the app Github.
+                </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">I Agree</button>
