@@ -12,13 +12,13 @@ from jinja2 import StrictUndefined
 # Flask: A class that we import. An instance of this class will be the
 # WSGI application.
 
-from flask import Flask, render_template, request, flash, redirect, session, url_for
+from flask import Flask, render_template, request, flash, redirect, session
 
 #Use toolbar for debugging
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Goal, Task
 
-from functools import wraps
+from flask.ext.bcrypt import Bcrypt
 
 # Instantiates Flask and "__name__" informs Flask where to find files.
 # Instantiates Flask. "__name__" is a special Python variable for the name of
@@ -35,109 +35,136 @@ app.jinja_env.auto_reload = True
 # Raises an error when an undefined variable is used in Jinja2.
 app.jinja_env.undefined = StrictUndefined
 
+bcrypt = Bcrypt(app)
+
 
 ################ Login/out Registration #####################
 
-
-@app.route("/go_register")
-def register_page():
-    """Send to registration form"""
-
-    return render_template("register.html")
-
-
 @app.route("/register", methods=['POST'])
 def register_form():
-    """Register user"""
+    """Register user."""
 
-    #Accept data from input fields
+    # Grab user's inputted data.
+    first = request.form.get('first_name')
+    last_name = request.form.get('last_name')
     email = request.form.get('email')
-    username = request.form.get('username')
+    username = request.form.get('display_name')
     password = request.form.get('password')
-    phone_number = request.form.get('phone_number')
+    password_confirm = request.form.get('password_confirmation')
 
-    #Commit new user details to the database
-    user = User(email=email,
+    # Make sure 'password' and 'password_confirm' match.
+    if password != password_confirm:
+        flash("The passwords do not match. Please type again.")
+        return redirect("/")
+
+    # Secure the users pw before storing in database.
+    pw_hash = bcrypt.generate_password_hash(password)
+
+    # Commit new user to database.
+    user = User(first_name=first,
+                last_name=last_name,
+                email=email,
                 username=username,
-                password=password,
-                phone_number=phone_number,
-                )
+                password=pw_hash)
+
     db.session.add(user)
     db.session.commit()
 
-    #Send confirmation msg and back to home page
+    # Store new user info in session.
+    user_id = db.session.query(User.id).filter_by(email=email).first()[0]
+    session["user_id"] = user_id
+
+    session["username"] = username
+    session["user_email"] = email
+
+    # Send confirmation msg and back to home page
     flash("Welcome, new user. Let's get things done!")
-    return redirect("/")
+    return redirect("/landing")
+
+
+@app.route('/')
+def display_login():
+    """Homepage. Login and registration displayed."""
+
+    return render_template("login.html")
 
 
 @app.route('/login', methods=['POST'])
 def login_form():
-    """Process login form"""
+    """Process login form."""
 
-    #Accept data from input fields
-    username = request.form.get("username")
-    password = request.form.get("password")
+    # Grab the users input.
+    email = request.form.get("email")
+    password = bcrypt.generate_password_hash(request.form.get("password"))
 
-    # Do these credentials align within the database?
+    # Check that the user exists.
     uq = User.query
-    user_object = uq.filter_by(email=username).first()
-    if user_object.email == username and user_object.password == password:
+    user_object = uq.filter_by(email=email).first()
+
+    if user_object and bcrypt.check_password_hash(password, user_object.password):
         flash("Hi again!")
         session["user_email"] = user_object.email
         session["user_id"] = user_object.user_id
-        user_id = user_object.user_id
+        session["username"] = user_object.username
+
+        return redirect("/landing")
     else:
         flash("Oops! Email / Password mismatch: Try again.")
+        return redirect("/")
 
-    return redirect("/")
 
-
-@app.route('/logout', methods=['POST'])
+@app.route('/logout')
 def logout_form():
     """Process logout form"""
 
-    # Remove session and notify user
+    # Remove user from session.
     session.clear()
     flash("Logged out. Don't be gone for too long!")
-    return redirect("/")
+    return render_template("logout.html")
 
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if g.user is None:
-            return redirect(url_for('login', next=request.url))
-        return f(*args, **kwargs)
-    return decorated_function
 
 ###################### Core Routes ##########################
 
+
 ################ Render information on goals and tasks from Model #############
-@app.route('/')
+@app.route('/landing')
 def landing():
+    """Main page after login/registration."""
 
-    return render_template("landing.html")
+    username = session['username']
+    print "I'm in the landing route! username={}".format(username)
+
+    return render_template("landing.html",
+                           username=username)
 
 
-@app.route('/goals/<int:user_id>', methods=['GET'])
-@login_required
+@app.route('/goals')
 def render_goals():
     """Queries DB to render the user's goals and takes them to goals.html"""
+
+    if Goal.check_by_user_id(user_id) is False:
+        flash("You have no goals currently! Would you like to add one?")
+        return render_template('add_goal.html')
+    else:
+
+        user = User.check_by_user_id(user_id)
+        goals = Goal.check_by_user_id(user_id)
 
     goals = db.session.query(Goal.active_goals).all()
     description = db.session.query(Goal.description).all()
 
     return render_template("goals.html",
-                           active_goals=goals,
+                           goals=goals,
                            description=description)
 
 
-@app.route('/tasks/<int:user_id>', methods=['GET'])
-@login_required
+@app.route('/tasks')
 def render_tasks():
     """Queries DB for user's tasks and takes them to tasks.html"""
 
-    tasks = db.session.query(Task.task_name).all()
+    user_id = session["user_id"]
+
+    tasks = db.session.query(Task.task_name).filter_by(user_id=user_id).all()
     due_date = db.session.query(Task.due_date).all()
 
     return render_template("tasks.html",
@@ -145,7 +172,7 @@ def render_tasks():
                            due_date=due_date)
 
 
-@login_required
+# @login_required
 def make_new_task(task_name, due_date, priority, date_added, open_close_status, task_frequency):
     """Add a new task to the DB"""
 

@@ -16,12 +16,29 @@ class User(db.Model):
     user_id = db.Column(db.Integer,
                         autoincrement=True,
                         primary_key=True)
-    username = db.Column(db.String(64), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-    profile_img = db.Column(db.String(200), nullable=True)
-    email = db.Column(db.String(50), unique=True, nullable=False)
-    time_zone = db.Column(db.String(25), nullable=True)
-    phone_number = db.Column(db.String(15), nullable=True)
+
+    first_name = db.Column(db.String(30),
+                           nullable=False)
+
+    last_name = db.Column(db.String(30),
+                          nullable=False)
+
+    username = db.Column(db.String(64),
+                         unique=True,
+                         nullable=False)
+
+    password = db.Column(db.String(200),
+                         nullable=False)
+
+    profile_img = db.Column(db.String(200),
+                            nullable=True)
+
+    email = db.Column(db.String(64),
+                      unique=True,
+                      nullable=False)
+
+    time_zone = db.Column(db.String(25),
+                          nullable=True)
 
     # Define relationship tasks table
     tasks = db.relationship("Task",
@@ -38,17 +55,6 @@ class User(db.Model):
         return "<User user_id=%s username=%s email=%s>" % (self.user_id,
                                                            self.username,
                                                            self.email)
-
-    @classmethod
-    def create_user(cls, email, username, password):
-        """Adding a new user to the db"""
-
-        new_user = cls(email=email, username=username, password=password)
-
-        db.session.add(new_user)
-        db.session.commit()
-
-        return
 
     @classmethod
     def check_by_email(cls, email):
@@ -145,8 +151,8 @@ class Task(db.Model):
     def closed_tasks():
         return db.session.query(Task).filter_by(open_close_status='0').order_by(Task.due_date.asc())
 
-
-    user = db.relationship('User', backref='tasks')
+    # FIXME: Receiving an ArgumentError: Error creating backref 'tasks' on relationship 'Task.user': property of that name exists on mapper 'Mapper|User|users'
+    # user = db.relationship('User', backref='tasks')
 
 
 class Reminders(db.Model):
@@ -213,20 +219,6 @@ class GoalCompletion(db.Model):
 #         return redirect(#FIXME #URLNAME)
 
 
-#need to add to server.py as part of displaying user task-
-# @app.route('/user/<int:user_id>')
-# def user_goals(user_id):
-#     """Display user's goals"""
-
-#     user_id = session["user_id"]
-
-#     if Goal.check_by_user_id(user_id) is False:
-#         flash("You have no goals currently! Would you like to add one!")
-#         return render_template('add_goal.html')
-#     else:
-
-#         user = User.check_by_user_id(user_id)
-         # goals = Goal.check_by_user_id(user_id)
 
 
 ############################################################################
@@ -266,12 +258,12 @@ class GoalCompletion(db.Model):
 
 
 ############################################################################
-# def init_app():
+def init_app():
 
-#     from server import app
+    from server import app
 
-#     connect_to_db(app)
-#     print "Connected to DB."
+    connect_to_db(app)
+    print "Connected to DB."
 
 def connect_to_db(app, db_uri='postgres:///task_manager'):
     """Connect the database to our Flask app."""
