@@ -49,7 +49,6 @@ class User(db.Model):
                            backref=db.backref("users"))
 
     def __repr__(self):
-
         """Provide helpful representation when printed."""
 
         return "<User user_id=%s username=%s email=%s>" % (self.user_id,
@@ -265,6 +264,7 @@ def init_app():
     connect_to_db(app)
     print "Connected to DB."
 
+
 def connect_to_db(app, db_uri='postgres:///task_manager'):
     """Connect the database to our Flask app."""
 
@@ -275,6 +275,32 @@ def connect_to_db(app, db_uri='postgres:///task_manager'):
     db.init_app(app)
 
 
+def example_data():
+    """Create sample data."""
+
+    user_1 = User(user_id=1,
+                  first_name='Minnie',
+                  last_name='Mouse',
+                  username='Minnie',
+                  password='MouseGal',
+                  profile_img='static/img/minnie.jpg',
+                  email='minnie@mouse.purr',
+                  time_zone='PST')
+
+    user_2 = User(user_id=2,
+                  first_name='Lady',
+                  last_name='Flash',
+                  username='LadyFlash',
+                  password='PowerfulLady',
+                  profile_img='static/img/ladyflash.jpg',
+                  email='lady@flash.pow',
+                  time_zone='PST')
+
+    #Add all to the database
+    db.session.add_all([user_1, user_2])
+    #Commit changes
+    db.session.commit()
+
 if __name__ == "__main__":
     """This is useful for running this module interactively. This will leave me
     in a state of being able to work with the database directly."""
@@ -283,5 +309,5 @@ if __name__ == "__main__":
 
     # Need to add to db.create_all()
 
-    connect_to_db(app)
+    connect_to_db(app, "postgresql:///testdb")
     print "Connected to DB."

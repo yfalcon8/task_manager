@@ -1,11 +1,11 @@
 import unittest
 from unittest import TestCase
 from server import app
-from model import connect_to_db, db, User
+from model import connect_to_db, db, User, example_data
 
 
-class FlaskRouteTests(TestCase):
-    """Flask tests."""
+class FlaskTestRoutes(TestCase):
+    """Flask tests before user is logged in."""
 
 ############### Testing Necessities ##############
 
@@ -25,94 +25,58 @@ class FlaskRouteTests(TestCase):
 
         #Go to homepage
         result = self.client.get("/")
+
         #Does the page render
-        self.assertEqual(result.status_code, 200)
+        self.assertIn('<h2>Please Sign In</h2>', result.data)
+
         #Does data make it to the DOM
         # self.assertIn('Connect!', result.data)
 
-    def test_login_form(self):
-        """Does the login form show"""
-
-        #Go to login form
-        result = self.client.get('/login')
-        #Does the page render
-        self.assertEqual(result.status_code, 200)
-        #Should see title of page
-        # self.assertIn('<h2>Login</h2>', result.data)
 
 ################# Test Database #################
-
 class FlaskTestDatabase(TestCase):
     """Flask tests that use the test database"""
 
     def setUp(self):
         """To do before each test"""
 
-        #Get the Flask test client
+        # Get the Flask test client
         self.client = app.test_client()
-        #Show Flask errors that happen during tests
+
+        # Show Flask errors that happen during tests
         app.config['TESTING'] = True
-        #Connect to test database
+
+        # Connect to test database.
         connect_to_db(app, "postgresql:///testdb")
-        #Create tables and add sample data
+
+        # Create tables and add sample data.
         db.create_all()
-        #Add example data to test database
-        """Create some sample data."""
 
-        #In case this is run more than once, empty out existing data
-        User.query.delete()
+        example_data()
 
-        user_id = db.Column(db.Integer,
-                            autoincrement=True,
-                            primary_key=True)
-        username = db.Column(db.String(64), unique=True, nullable=False)
-        password = db.Column(db.String(200), nullable=False)
-        profile_img = db.Column(db.String(200), nullable=True)
-        email = db.Column(db.String(50), unique=True, nullable=False)
-        time_zone = db.Column(db.String(25), nullable=True)
-        phone_number = db.Column(db.Integer, nullable=True)
-
-
-        #Add test example users
-        self.user_1 = User(username='Minnie',
-                               password='MouseGal',
-                               profile_img='static/img/minnie.jpg',
-                               email='minnie@mouse.purr',
-                               time_zone='PST',
-                               phone_number='510-510-5100')
-        self.user_2 = User(username='LadyFlash',
-                               password='PowerfulLady',
-                               profile_img='static/img/ladyflash.jpg',
-                               email='lady@flash.pow',
-                               time_zone='PST',
-                               phone_number='925-925-9255')
-
-        #Add all to the database
-        db.session.add_all([self.user_1, self.user_2])
-        #Commit changes
-        db.session.commit()
-
-    def test_find_user(self):
+    def test_find_user_by_username(self):
         """Can we find a user in the database"""
 
         #Query the database for a user
-        user = User.query.filter_by(name='Minnie').first()
+        user = User.query.filter_by(username='Minnie').first()
         #What the result of query should be:
         self.assertEqual(user.time_zone, 'PST')
 
     def tearDown(self):
         """Things to do at end of every test"""
 
-        #Close the session
+        # Close the session.
         db.session.close()
-        #Drop the database
+
+        # Drop the database.
         db.drop_all()
 
-    def test_find_user(self):
+    def test_find_user_by_email(self):
         """Can we find a user in the database"""
 
         #Query the database for a user
         user = User.query.filter_by(email='lady@flash.pow').first()
+
         #Query results should be:
         self.assertEqual(user.username, 'LadyFlash')
 
@@ -120,8 +84,11 @@ class FlaskTestDatabase(TestCase):
         """Is the login form processed correctly"""
 
         #Process login form
-        result = self.client.post('/login', data={'email': 'lady@flash.pow',
-                                  'password': 'PowerfulLady'}, follow_redirects=True)
+        result = self.client.post('/',
+                                  data={'email': 'lady@flash.pow',
+                                        'password': 'PowerfulLady'},
+                                  follow_redirects=True)
+
         #Expect ok status code from / route
         self.assertEqual(result.status_code, 200)
         #Flash message should appear when user logs in
@@ -188,16 +155,18 @@ class FlaskTestsLoggedIn(TestCase):
     def setUp(self):
         """Things to do before each test"""
 
-        #Get the Flask test client
-        self.client = app.test_client()
         #Show Flask errors that happen during tests
         app.config['TESTING'] = True
-        #Connect to test database
-        connect_to_db(app)
+
+        app.config['SECRET_KEY'] = 'seKriTz'
+
+        #Get the Flask test client
+        self.client = app.test_client()
+
         #Add user to the session
         with self.client as c:
             with c.session_transaction() as sess:
-                sess['user_id'] = 10
+                sess['user_id'] = 1
 
     def test_base_homepage(self):
         """Test that user is redirected to homepage if logged in"""
@@ -232,4 +201,3 @@ class FlaskTestsLoggedIn(TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

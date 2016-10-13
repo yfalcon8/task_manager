@@ -17,6 +17,8 @@
             </nav>
         </div>
 
+<a href="/goals">View Goals</a><br>
+<a href="/calendar">View Calendar</a>
 <!-- This is the main div where the user will see all current tasks. -->
         <div id="main_task_div" class="col-sm-9 col-lg-10">
             <!-- Content -->
@@ -49,7 +51,11 @@
                     </div>
                 </div>
 
-                <!-- insert table -->{{ tasks }}
+                <!-- insert table -->
+                {% for task in tasks %}
+                    <input type="checkbox" name="task" value="{{ task.task_name }}">{{ task.task_name }} {{ task.due_date }}<br>
+                {% endfor %}
+
                             <script type="text/javascript">
                 //make an ajax call that shows the task is added - this is currently an alert box
 
@@ -85,7 +91,7 @@
                 }
             }
                 </script>
-                <button id="complete_task" type="submit">Mark Task Complete</button><br>
+                <button id="complete_task" type="submit">Mark Task(s) Complete</button><br>
                 <script type="text/javascript">
 
                 //When the button is clicked the user is alerted that their task is marked complete
@@ -94,7 +100,7 @@
                 }
             );
                 </script>
-                <button id="delete_task" type="submit">Delete Task</button><br>
+                <button id="delete_task" type="submit">Delete Task(s)</button><br>
                 <script type="text/javascript">
 
                 //when the button is clicked the user is alerted that the task is deleted

@@ -3,7 +3,8 @@ VALUES ('Minnie', 'Minnie', 'Mouse', 'MouseGal', 'static/img/minnie.jpg', 'minni
 ('LadyFlash', 'Lady', 'Flash', 'PowerfulLady', 'static/img/ladyflash.jpg', 'lady@flash.pow', 'PST');
 
 INSERT INTO tasks (task_name, due_date, priority, open_close_status, user_id, task_frequency, taskcat_name)
-VALUES ('Do laundry', '10/31/16', 5, 1, 1, 'weekly', 'personal');
+VALUES ('Do laundry', '10/31/16', 5, 1, 1, 'weekly', 'personal'),
+('Meet with Ben', '11/15/16', 5, 1, 1, 'weekly', 'professional');
 
 INSERT INTO goals (user_id, description, active_goal, time_toachieve, goalcat_name)
 VALUES (1, 'Be a better communicator', 'True', 'month', 'professional');

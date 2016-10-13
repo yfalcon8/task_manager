@@ -6,6 +6,7 @@
 
 #Access local env variables
 import os
+# import quickstart
 
 from jinja2 import StrictUndefined
 
@@ -18,7 +19,7 @@ from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Goal, Task
 
-from flask.ext.bcrypt import Bcrypt
+from flask_bcrypt import Bcrypt
 
 # Instantiates Flask and "__name__" informs Flask where to find files.
 # Instantiates Flask. "__name__" is a special Python variable for the name of
@@ -132,7 +133,6 @@ def landing():
     """Main page after login/registration."""
 
     username = session['username']
-    print "I'm in the landing route! username={}".format(username)
 
     return render_template("landing.html",
                            username=username)
@@ -164,12 +164,10 @@ def render_tasks():
 
     user_id = session["user_id"]
 
-    tasks = db.session.query(Task.task_name).filter_by(user_id=user_id).all()
-    due_date = db.session.query(Task.due_date).all()
+    tasks = db.session.query(Task.task_name, Task.due_date).filter_by(user_id=user_id).all()
 
     return render_template("tasks.html",
-                           tasks=tasks,
-                           due_date=due_date)
+                           tasks=tasks)
 
 
 # @login_required
@@ -190,24 +188,35 @@ def make_new_task(task_name, due_date, priority, date_added, open_close_status, 
     print "Successfully added task: {}".format(task_name)
 
 
+@app.route('/googlecalendar', methods=['GET'])
+def google_map():
+    return render_template("index-test.html")
+
+
+@app.route('/testing')
+def test_page():
+    return render_template("testpage.html")
+
+
 ################### Helper Functions #######################
 
 # Listening or requests
 if __name__ == "__main__":
 
-    connect_to_db(app)
-
-    #Create tables from models.py
-    db.create_all(app=app)
-
     #Set debug=True in order to invoke the DebugToolbarExtension
     app.debug = True
+
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
     # app.config['TRAP_HTTP_EXCEPTIONS'] = True
     # app.config['Testing'] = True
     #Use of debug toolbar
     DebugToolbarExtension(app)
 
+    connect_to_db(app)
+
+    #Create tables from models.py
+    db.create_all(app=app)
 
     #Run app locally (full)
     #Points to port to use and turns on debugger
