@@ -28,7 +28,6 @@
 //
 //**************************************************************************************************************
 
-
 // html element that holds the chart
 var viz_container;
 
@@ -104,7 +103,7 @@ function initialize() {
     //Like D3 and jQuery, vizuly uses a function chaining syntax to set component properties
     //Here we set some bases line properties for all three components.
     vizs.forEach(function (viz,i) {
-        viz.data(80)                       // Current value
+        viz.data(0)                         // Current value - changes size of progress
             .height(600)                    // Height of component - radius is calculated automatically for us
             .min(0)                         // min value
             .max(100)                       // max value
@@ -113,30 +112,40 @@ function initialize() {
             .on("mouseover",onMouseOver)    // mouseover callback - all viz components issue these events
             .on("mouseout",onMouseOut)      // mouseout callback - all viz components issue these events
             .on("click",onClick);           // mouseout callback - all viz components issue these events
-    })
+    });
 
-    //
+    a=50;
+    b=20;
+    c=80;
+
     // Now we set some unique properties for all three components to demonstrate the different settings.
-    //
+
     vizs[0]
-        .startAngle(250)                         // Angle where progress bar starts
-        .endAngle(110)                           // Angle where the progress bar stops
-        .arcThickness(.12)                        // The thickness of the arc (ratio of radius)
+        .data(a)
+        .startAngle(180)                         // Angle where progress bar starts
+        .endAngle(180)                           // Angle where the progress bar stops
+        .arcThickness('.12')                     // The thickness of the arc (ratio of radius)
         .label(function (d,i) {                  // The 'label' property allows us to use a dynamic function for labeling.
-            return d3.format(".0f")(d);
+            return d3.format(".0f")(d) + "%";
         });
 
     vizs[1]
-        .startAngle(210)
-        .endAngle(150)
-        .arcThickness(.07)
-        .label(function (d,i) { return d3.format("$,.2f")(d); });
-
-    vizs[2]
+        .data(b)
         .startAngle(180)
         .endAngle(180)
-        .arcThickness(.04)
-        .label(function (d,i) { return d3.format(".0f")(d) + "%"; });
+        .arcThickness('.12')
+        .label(function (d,i) {
+            return d3.format(".0f")(d) + "%";
+        });
+
+    vizs[2]
+        .data(c)
+        .startAngle(180)
+        .endAngle(180)
+        .arcThickness('.12')
+        .label(function (d,i) {
+            return d3.format(".0f")(d) + "%";
+        });
 
     //We use this function to size the components based on the selected value from the RadiaLProgressTest.html page.
     changeSize(document.getElementById("displaySelect").value);
@@ -150,19 +159,19 @@ function initialize() {
             })
             .start();
         reels.push(showReel);
-    })
+    });
 
     d3.select("body").on("mousedown.reel",function () {
         //Stop show reel
-        reels.forEach(function (reel) { reel.stop() })
+        reels.forEach(function (reel) { reel.stop(); });
         //Remove event listener
         d3.select("body").on("mousedown.reel",null);
-    })
+    });
 
 
 }
 
-//Here we want to animate the label value by capturin the tween event
+//Here we want to animate the label value by capturing the tween event
 //that occurs when the component animates the value arcs.
 function onTween(viz,i) {
     viz.selection().selectAll(".vz-radial_progress-label")
@@ -194,7 +203,7 @@ function changeSkin(val) {
     themes.forEach(function (theme,i) {
         //If the user selects "none" for the skin we need to tell the theme to release the component and clear
         //any applied styles.
-        if (val == "Neon") {
+        if (val == "none") {
             theme.release();
             vizs[i].update();
         }
@@ -204,7 +213,7 @@ function changeSkin(val) {
             theme.skin(val);
             theme.viz().update();  //We could use theme.apply() here, but we want to trigger the tween.
         }
-    })
+    });
 
 }
 
@@ -212,7 +221,7 @@ function changeSkin(val) {
 function changeEndCap(val) {
     vizs.forEach(function (viz,i) {
         vizs[i].capRadius(Number(val)).update();
-    })
+    });
 }
 
 //This changes the size of the component by adjusting the radius and width/height;
@@ -223,9 +232,9 @@ function changeSize(val) {
     var divWidth = s[0] * 0.80 / 3;
 
     divs.forEach(function (div,i) {
-        div.style("width",divWidth + 'px').style("margin-left", (s[0] *.05) + "px");
+        div.style("width",divWidth + 'px').style("margin-left", (s[0] *'.05') + "px");
         vizs[i].width(divWidth).height(divWidth).radius(divWidth/2.2).update();
-    })
+    });
 
 }
 
@@ -233,7 +242,7 @@ function changeSize(val) {
 function changeData(val) {
     vizs.forEach(function (viz,i) {
         vizs[i].data(Number(val)).update();
-    })
+    });
 }
 
 

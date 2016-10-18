@@ -1,5 +1,6 @@
 /env
 env/
+env-task-manager/
 secrets.sh
 api.py
 *.DS_Store
@@ -11,3 +12,5 @@ api.py
 node_modules
 *.log
 build
+_test.py
+templates/.DS_Store
