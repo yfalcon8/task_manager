@@ -84,23 +84,20 @@ class FlaskTestDatabase(TestCase):
         """Is the login form processed correctly"""
 
         #Process login form
-        result = self.client.post('/',
-                                  data={'email': 'lady@flash.pow',
-                                        'password': 'PowerfulLady'},
+        result = self.client.post('/login',
+                                  data={'email': 'lady@flash.pow', 'password': 'PowerfulLady'},
                                   follow_redirects=True)
 
-        #Expect ok status code from / route
-        self.assertEqual(result.status_code, 200)
         #Flash message should appear when user logs in
-        self.assertIn('Hi again!', result.data)
+        self.assertIn('Welcome back', result.data)
 
     def test_process_login_incorrect_password(self):
         """Is login form processed correctly when user types wrong password"""
 
         #Process login form with incorrect password
-        result = self.client.post('/login',
-                                  data={'email': 'minnie@mouse.purr',
-                                        'password': 'Mousey'}, follow_redirects=True)
+        result = self.client.post('/',
+                                  data={'email': 'minnie@mouse.purr', 'password': 'Mousey'},
+                                  follow_redirects=True)
         #Should get ok status code from / route
         self.assertEqual(result.status_code, 200)
         #Flash message should appear when user types wrong password
