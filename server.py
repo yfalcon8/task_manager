@@ -217,7 +217,6 @@ if __name__ == "__main__":
     #Use of debug toolbar
     DebugToolbarExtension(app)
 
-
     #Run app locally (full)
     #Points to port to use and turns on debugger
     app.run(port=5050, debug=True, host='0.0.0.0')
