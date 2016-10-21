@@ -13,20 +13,24 @@
 <div class="container-fluid">
     <div class="row form-group"> 
         <hr class="colorgraph">
-        <div class="col-sm-3 col-lg-2 col-md-6" id="left_bar">
-            <nav class="navbar navbar-default navbar-fixed-side"></nav>
-        
+        <div class="col-xs-12 col-md-9 col-md-push-3" id="left_bar">
+            <nav class="navbar navbar-default navbar-fixed-side">
+                <a href="/goals">View Goals</a><br>
+                <a href="/calendar">View Calendar</a>
+            </nav>
 
-            <a href="/goals">View Goals</a><br>
-            <a href="/calendar">View Calendar</a>
     </div>  
 </div>
 <!-- This is the main div where the user will see all current tasks. -->
-        <div class="col-xs-10 col-sm-9 col-md-6 col-sm-offset-2 col-md-offset-3" id="main_task_div" >
+        <div class="col-xs-12 col-md-3 col-md-pull-9" id="main_task_div" >
+            <fieldset>
             <!-- Content -->
             <!-- Jinja loop feed from the db the current tasks -->   {% for task in tasks %}
                     <input type="checkbox" name="task" value="{{ task.task_name }}">{{ task.task_name }} {{ task.due_date }}<br>
                 {% endfor %}
+            </fieldset>
+        <br>
+        <br>
         <div id="addTaskModal" class="modal col-xs-10 col-sm-9 col-md-6 col-sm-offset-2 col-md-offset-3"> 
             <div class="model-content modal-lg">
                 <button type="button" class="close" data-dismiss="modal">X</button>

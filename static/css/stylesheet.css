@@ -156,6 +156,12 @@ fieldset {
     min-width: 0;
 }
 
+#main_task_div {
+    text-align: center;
+    border-collapse: black;
+    border: 10px;
+}
+
 
 
 
