@@ -19,7 +19,11 @@ from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, Goal, Task
 
+<<<<<<< HEAD
 from flask_bcrypt import Bcrypt
+=======
+from flask.ext.bcrypt import Bcrypt
+>>>>>>> origin/zahra
 
 # Instantiates Flask and "__name__" informs Flask where to find files.
 # Instantiates Flask. "__name__" is a special Python variable for the name of
@@ -133,6 +137,7 @@ def landing():
     """Main page after login/registration."""
 
     username = session['username']
+<<<<<<< HEAD
     user_id = session["user_id"]
 
     tasks = db.session.query(Task.open_close_status).filter_by(user_id=user_id).all()
@@ -153,12 +158,23 @@ def landing():
                            username=username)
 
 
+=======
+    print "I'm in the landing route! username={}".format(username)
+
+    return render_template("landing.html",
+                           username=username)
+
+
+>>>>>>> origin/zahra
 @app.route('/goals')
 def render_goals():
     """Queries DB to render the user's goals and takes them to goals.html"""
 
+<<<<<<< HEAD
     user_id = session['user_id']
 
+=======
+>>>>>>> origin/zahra
     if Goal.check_by_user_id(user_id) is False:
         flash("You have no goals currently! Would you like to add one?")
         return render_template('add_goal.html')
@@ -220,20 +236,33 @@ def test_page():
 # Listening or requests
 if __name__ == "__main__":
 
+<<<<<<< HEAD
     #Set debug=True in order to invoke the DebugToolbarExtension
     app.debug = True
 
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+=======
+    connect_to_db(app)
+
+    #Create tables from models.py
+    db.create_all(app=app)
+
+    #Set debug=True in order to invoke the DebugToolbarExtension
+    app.debug = True
+>>>>>>> origin/zahra
 
     # app.config['TRAP_HTTP_EXCEPTIONS'] = True
     # app.config['Testing'] = True
     #Use of debug toolbar
     DebugToolbarExtension(app)
+<<<<<<< HEAD
 
     connect_to_db(app)
 
     #Create tables from models.py
     db.create_all(app=app)
+=======
+>>>>>>> origin/zahra
 
     #Run app locally (full)
     #Points to port to use and turns on debugger
