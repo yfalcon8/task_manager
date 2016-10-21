@@ -158,7 +158,7 @@ fieldset {
 
 #main_task_div {
     text-align: center;
-    border-collapse: black;
+    box-sizing: border-box;
     border: 10px;
 }
 
