@@ -27,37 +27,36 @@
             <!-- Jinja loop feed from the db the current tasks -->   {% for task in tasks %}
                     <input type="checkbox" name="task" value="{{ task.task_name }}">{{ task.task_name }} {{ task.due_date }}<br>
                 {% endfor %}
-
-                            <div id="addTaskModal" class="modal"> 
-                    <div class="model-content">
-                        <span class="close">X</span>
-                        <p> 
-                            <form action="/url for server", methods="POST">
-                                Task Name:
-                                 <input type="text" name="taskname"><br>
-                                Due Date:
-                                 <input type="date" name="task_due_date"><br>
-                                Priority 
-                                <select name="priority">
-                                  <option value="high">High</option>
-                                  <option value="medium">Medium</option>
-                                  <option value="low">Low</option>
-                                </select><br>
-                                Task Frequency
-                                <select name="task_frequency">
-                                    <option value="never">Once</option>
-                                    <option value="daily">Daily</option>
-                                    <option value="weekly">Weekly</option>
-                                    <option value="monthly">Monthly</option>
-                                </select><br>
-                                <input type="submit">
-                            </form> 
-                    </p>
-                    <hr class="colorgraph">
-                    <div class="form-group">
-                    </div>
-                </div>
-                </div>
+        <div id="addTaskModal" class="modal col-xs-10 col-sm-9 col-md-6 col-sm-offset-2 col-md-offset-3"> 
+            <div class="model-content modal-lg">
+                <button type="button" class="close" data-dismiss="modal">X</button>
+                <h4 class="modal-title">Add a New Task</h4></div>
+                <div class="modal-body"> 
+                    <form role="form" action="/tasks" method="POST">
+                        <fieldset>
+                            Task Name:
+                             <input type="text" name="taskname"><br>
+                            Due Date:
+                             <input type="date" name="task_due_date"><br>
+                            Priority 
+                            <select name="priority">
+                              <option value="high">High</option>
+                              <option value="medium">Medium</option>
+                              <option value="low">Low</option>
+                            </select><br>
+                            Task Frequency
+                            <select name="task_frequency">
+                                <option value="never">Once</option>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select><br>
+                            <input type="submit">
+                        </fieldset>
+                    </form> 
+                </p>
+            </div>
+        </div>
 
                 <!-- insert table -->
                 
@@ -96,6 +95,7 @@
                 }
             }
                 </script>
+                <button id="add_task" onclick="document.getElementById('#add_task').style.display='block'" data-toggle="modal" data-target='#add_task' class="btn btn-primary">Add Task</button><br>
                 <button id="complete_task" type="submit">Mark Task(s) Complete</button><br>
                 <script type="text/javascript">
 
