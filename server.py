@@ -133,6 +133,21 @@ def landing():
     """Main page after login/registration."""
 
     username = session['username']
+    user_id = session["user_id"]
+
+    tasks = db.session.query(Task.open_close_status).filter_by(user_id=user_id).all()
+
+    zero = 0
+    one = 0
+
+    for task in tasks:
+        if task[0] == 0:
+            zero += 1
+        if task[0] == 1:
+            one += 1
+
+    completion_rate = (one / float(zero + one))
+    print completion_rate
 
     return render_template("landing.html",
                            username=username)
@@ -141,6 +156,8 @@ def landing():
 @app.route('/goals')
 def render_goals():
     """Queries DB to render the user's goals and takes them to goals.html"""
+
+    user_id = session['user_id']
 
     if Goal.check_by_user_id(user_id) is False:
         flash("You have no goals currently! Would you like to add one?")

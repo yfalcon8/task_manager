@@ -129,19 +129,20 @@ class Task(db.Model):
     task_frequency = db.Column(db.String(50), nullable=False)            # daily, weekly,monthly
     taskcat_name = db.Column(db.String(50), nullable=False)              # task category as dropdown, request.form.get
 
-    def __init__(self, task_name, due_date, priority, date_added, open_close_status, user_id):
+    def __init__(self, task_name, due_date, priority, open_close_status, user_id, task_frequency, taskcat_name):
         self.task_name = task_name
         self.due_date = due_date
         self.priority = priority
-        self.date_added = date_added
         self.open_close_status = open_close_status
         self.user_id = user_id
+        self.task_frequency = task_frequency
+        self.taskcat_name = taskcat_name
 
     def __repr__(self):
         return '<name={}>'.format(self.task_name)
 
-    def open_tasks():
-        return db.session.query(Task).filter_by(open_close_status='1').order_by(Task.due_date.asc())
+    def open_tasks(user_id):
+        return db.session.query(Task).filter_by(open_close_status='1', user_id=user_id).order_by(Task.due_date.asc())
 
     def closed_tasks():
         return db.session.query(Task).filter_by(open_close_status='0').order_by(Task.due_date.asc())
