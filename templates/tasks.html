@@ -13,15 +13,15 @@
 <div class="container-fluid">
     <div class="row form-group"> 
         <hr class="colorgraph">
-        <div class="col-xs-12 col-md-3 col-md-push-3 col-lg-push-3" id="left_bar">
-            <nav class="navbar navbar-default navbar-fixed-side">
+        <div class="col-xs-12 col-md-3 col-lg-3" id="left_bar">
+<!--             <nav class="navbar navbar-default navbar-fixed-side"> -->
                 <a href="/goals">View Goals</a><br>
                 <a href="/calendar">View Calendar</a>
-            </nav>
+<!--             </nav> -->
         </div>  
     </div>
 <!-- This is the main div where the user will see all current tasks. -->
-    <div class="col-xs-12 col-md-9 col-md-pull-9 col-lg-pull-9" id="main_task_div" >
+    <div class="col-xs-12 col-md-9 col-lg-9" id="main_task_div" >
         <fieldset>
         <!-- Content -->
         <!-- Jinja loop feed from the db the current tasks -->   {% for task in tasks %}
@@ -83,7 +83,6 @@
             );
                                 //<!-- insert table -->
                 
-                <script type="text/javascript">
                 //make an ajax call that shows the task is added - this is currently an alert box
 
                 //when the button w the id add task is clicked, an alert box tells the user
