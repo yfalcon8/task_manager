@@ -39,7 +39,12 @@ div {
 }
 
 
-
+#left_bar {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
 
 .myProgress {
     position: relative;
@@ -131,9 +136,7 @@ div {
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
+
 
 input[type=submit] {
     margin-left: 40px !important;
