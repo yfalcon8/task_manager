@@ -32,6 +32,36 @@ bcrypt = Bcrypt(app)
 
 
 ################ Login/out Registration #####################
+@app.route('/')
+def display_login():
+    """Homepage. Login and registration displayed."""
+
+    return render_template("login.html")
+
+
+@app.route('/login', methods=['POST'])
+def login_form():
+    """Process login form."""
+
+    # Grab the users input.
+    email = request.form.get("email")
+    password = bcrypt.generate_password_hash(request.form.get("password"))
+
+    # Check that the user exists.
+    uq = User.query
+    user = uq.filter_by(email=email).first()
+
+    if user and bcrypt.check_password_hash(password, user.password):
+        flash("Hi again!")
+        session["user_email"] = user.email
+        session["user_id"] = user.user_id
+        session["username"] = user.username
+
+        return redirect("/landing")
+    else:
+        flash("Oops! Email / Password mismatch: Try again.")
+        return redirect("/")
+
 
 @app.route("/register", methods=['POST'])
 def register_form():
@@ -75,37 +105,6 @@ def register_form():
     return redirect("/landing")
 
 
-@app.route('/')
-def display_login():
-    """Homepage. Login and registration displayed."""
-
-    return render_template("login.html")
-
-
-@app.route('/login', methods=['POST'])
-def login_form():
-    """Process login form."""
-
-    # Grab the users input.
-    email = request.form.get("email")
-    password = bcrypt.generate_password_hash(request.form.get("password"))
-
-    # Check that the user exists.
-    uq = User.query
-    user_object = uq.filter_by(email=email).first()
-
-    if user_object and bcrypt.check_password_hash(password, user_object.password):
-        flash("Hi again!")
-        session["user_email"] = user_object.email
-        session["user_id"] = user_object.user_id
-        session["username"] = user_object.username
-
-        return redirect("/landing")
-    else:
-        flash("Oops! Email / Password mismatch: Try again.")
-        return redirect("/")
-
-
 @app.route('/logout')
 def logout_form():
     """Process logout form"""
@@ -138,11 +137,8 @@ def landing():
         if task[0] == 1:
             one += 1
 
-    completion_rate = (one / float(zero + one))
-    print completion_rate
-
-    return render_template("landing.html",
-                           username=username)
+    # completion_rate = (one / float(zero + one))
+    # print completion_rate
 
     return render_template("landing.html",
                            username=username)
@@ -214,14 +210,7 @@ def test_page():
 
 if __name__ == "__main__":
 
-    #Set debug=True in order to invoke the DebugToolbarExtension
-    app.debug = True
-
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-    connect_to_db(app)
-
-    #Create tables from models.py
-    db.create_all(app=app)
 
     #Set debug=True in order to invoke the DebugToolbarExtension
     app.debug = True
@@ -231,11 +220,6 @@ if __name__ == "__main__":
     DebugToolbarExtension(app)
 
     connect_to_db(app)
-
-    #Create tables from models.py
     db.create_all(app=app)
-    app.run(port=5050, debug=True, host='0.0.0.0')
 
-    #Run app via Heroku
-    # PORT = int(os.environ.get("PORT", 5000))
-    # app.run(host="0.0.0.0", port=PORT)
+    app.run(port=5000, debug=True, host='0.0.0.0')
