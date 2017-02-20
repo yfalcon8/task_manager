@@ -1,10 +1,9 @@
 import unittest
-from unittest import TestCase
 from server import app
 from model import connect_to_db, db, User, example_data
 
 
-class FlaskTestRoutes(TestCase):
+class FlaskTestRoutes(unittest.TestCase):
     """Flask tests before user is logged in."""
 
 ############### Testing Necessities ##############
@@ -23,18 +22,12 @@ class FlaskTestRoutes(TestCase):
     def test_home_route(self):
         """Test route to homepage."""
 
-        #Go to homepage
         result = self.client.get("/")
-
-        #Does the page render
         self.assertIn('<h2>Please Sign In</h2>', result.data)
-
-        #Does data make it to the DOM
-        # self.assertIn('Connect!', result.data)
 
 
 ################# Test Database #################
-class FlaskTestDatabase(TestCase):
+class FlaskTestDatabase(unittest.TestCase):
     """Flask tests that use the test database"""
 
     def setUp(self):
@@ -144,9 +137,10 @@ class FlaskTestDatabase(TestCase):
         self.assertIn('That email is already taken',
                       result.data)
 
+
 ################# Test Login/out #################
 
-class FlaskTestsLoggedIn(TestCase):
+class FlaskTestsLoggedIn(unittest.TestCase):
     """Flask test with user logged in to session"""
 
     def setUp(self):

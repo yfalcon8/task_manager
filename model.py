@@ -6,20 +6,12 @@ db = SQLAlchemy()
 
 import datetime
 
-# from datetime import datetime
-
-
 ##############################################################################
-<<<<<<< HEAD
-=======
-# Model definitions
-
 
 def make_timestamp():
     return datetime.now()
 
 
->>>>>>> origin/zahra
 class User(db.Model):
     """User of website."""
 
@@ -216,7 +208,6 @@ class GoalCompletion(db.Model):
 
 #need to add to server.py as part of delete task-
 
-<<<<<<< HEAD
 # def delete_entry(task_id):
 #     new_id = task_id
 #     task = db.session.query(Task).filter_by(task_id=new_id)
@@ -263,10 +254,6 @@ class GoalCompletion(db.Model):
 #         return "<goalcat_id=%s goalcat_name=%s>" % (self.goalcat_id, self.goalcat_name)
 
 
-
-
-=======
->>>>>>> origin/zahra
 ############################################################################
 def init_app():
 
