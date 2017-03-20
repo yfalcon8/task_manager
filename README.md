@@ -2,26 +2,17 @@
 ### [Task Manager](http://todotada.herokuapp.com "ToDo to TaDa")
 
 
-![break](markdown/background-line.png "line break")
-
 ## Table of Contents
 
 * [About](#about)
 * [Technologies](#tech)
-* [Development](#dev)
-* [User Experience](#user)
 * [Run Locally](#run)
-* [Authors](#authors)
-
-![break](markdown/background-line.png "line break")
 
 ## <a name="about"></a>About
 
 Five ladies came together to share their love of learning to code.
 
 Users, get ready to visualize the progress of your tasks and goals. 
-
-![break](markdown/background-line.png "line break")
 
 ## <a name="tech"></a>Technologies
 
@@ -34,9 +25,6 @@ Users, get ready to visualize the progress of your tasks and goals.
 **Dependencies:** [requirements.txt](requirements.txt "Dependencies")
 
 **Test Coverage:** [xx% unittest coverage](tests.py)
-
-![break](markdown/background-line.png "line break")
-
 
 ## <a name="run"></a>Run Locally
 ### Flask App
@@ -80,6 +68,6 @@ In your command line, start up the Flask server
 	
 	$ python server.py
 	
-In your browser, visit localhost:5000.
+In your browser, visit localhost:5000
 
 Enjoy!
