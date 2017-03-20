@@ -176,7 +176,7 @@ class FlaskTestsLoggedIn(unittest.TestCase):
     def test_process_login(self):
         """Is the user redirected to the correct page after logging in?"""
 
-        result = self.client.post('/login',
+        result = self.client.post("/login",
                                   data={'first_name': 'Lady',
                                         'last_name': 'Flash',
                                         'profile_img': 'static/img/ladyflash.jpg',
