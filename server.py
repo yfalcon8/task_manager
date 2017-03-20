@@ -123,8 +123,8 @@ def home():
 
 
 ################ Render information on goals and tasks from Model #############
-# @app.route('/landing')
-# def landing():
+@app.route('/landing')
+def landing():
 #     """Main page after login/registration."""
 
 #     username = session['username']
@@ -144,8 +144,8 @@ def home():
 #     # completion_rate = (one / float(zero + one))
 #     # print completion_rate
 
-#     return render_template("landing.html",
-#                            username=username)
+    return render_template("landing.html",
+                           username="Minnie")
 
 
 # @app.route('/goals')

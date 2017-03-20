@@ -2,23 +2,24 @@
 <html lang="en">
 
 <head>
-{% block head %}
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Task Manager">
-    <title>Task Manager</title>
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="/static/img/favicon.ico">
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Lato:700" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/static/css/stylesheet.css">
-{% endblock head %}
+    {% block head %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Task Manager">
+
+        <title>Todo Tada</title>
+
+        <link rel="shortcut icon" href="/static/img/favicon.ico">
+        <link href="https://fonts.googleapis.com/css?family=Lato:700" rel="stylesheet">
+        <link rel="stylesheet" href="/static/css/stylesheet.css">
+    {% endblock head %}
 </head>
 
 <body>
-
+    {% block content %}
+        <p>Put your body here.</p>
+    {% endblock %}
 </body>
     <!-- jQuery -->
     <script type="text/javascript" src="https://ajax.microsoft.com/ajax/jQuery/jquery-1.4.2.min.js"></script>

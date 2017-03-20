@@ -1,20 +1,13 @@
-
-    <div id="c">
+{% extends "base.html" %}
+<!--     <div id="c">
         <div class="container">
             <p>Created by <a href="http://www.ourlinks">Our Names</a></p>
         
         </div>
-    </div>
+    </div> -->
 
-<!-- Bootstrap core JavaScript
-Placed at the end of the document so the pages load faster -->
     <script src="assets/js/bootstrap.js"></script>
-    <script>
-    $('.carousel').carousel({
-      interval: 3500
-    })
-    </script>
-  </body>
+
 </html>
 <head>
 {% block head %}
@@ -22,28 +15,26 @@ Placed at the end of the document so the pages load faster -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Task Manager">
-    <title>Task Manager</title>
-    <!-- Favicon -->
+    <title>Todo Tada</title>
+
     <link rel="shortcut icon" href="/static/img/favicon.ico">
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Lato:700" rel="stylesheet">
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/css/stylesheet.css">
 {% endblock head %}
 </head>
+{% block content %}
 <div class="container">
     <div class="row" id="" style="margin-top:20px">
         <fieldset>
             <h1>Landing Paaaaaage</h1>
 
-            <p>This is the page users see once they login/register.</p>
-                Welcome back, {{ username }}!<br>
+            <p>Welcome back, {{ username }}!</p>
+
         </fieldset>
     </div>
 </div>
-
+{% endblock %}
 <a href="/tasks">Tasks</a><br>
-
 <a href="/goals">Goals</a><br>
 <a href="/calendar">Calendar</a>
 
