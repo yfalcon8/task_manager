@@ -1,8 +1,10 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% block extra_js %}
 <!-- Here is where the link to the JS would go once that is coded -->
 <script type="text/javascript" src="static/"></script>
 {% endblock %}
+
 {% block content %}
 <!-- This div will be the fixed left bar for the user to click to act on the goals that are in the "main goal page div" below -->
 <body>
@@ -22,7 +24,7 @@
         <div id="main_goal_div" class="col-sm-9 col-lg-10">
             <!-- Content  -->
             <!-- Jinja loop feed from the db the current goals -->
-            {% for goal in active_goals %}
+            <p>% for goal in active_goals %}</p> 
                 show the description
                 <h1>All Goals</h1>
     
@@ -38,9 +40,9 @@
         <button class="w3-btn w3-dark-grey">Click Me</button>
 
     </div>
-                check_by_user_id() 
+                <p>check_by_user_id() </p>
 
-            {% endfor %}
+            <p>% endfor %</p>
         </div>
     </div>
 </div>

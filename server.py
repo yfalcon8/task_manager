@@ -125,7 +125,7 @@ def home():
 ################ Render information on goals and tasks from Model #############
 @app.route('/landing')
 def landing():
-#     """Main page after login/registration."""
+    """Main page after login/registration."""
 
 #     username = session['username']
 #     user_id = session["user_id"]
@@ -148,8 +148,8 @@ def landing():
                            username="Minnie")
 
 
-# @app.route('/goals')
-# def render_goals():
+@app.route('/goals')
+def render_goals():
 #     """Queries DB to render the user's goals and takes them to goals.html"""
 
 #     user_id = session['user_id']
@@ -165,21 +165,19 @@ def landing():
 #     goals = db.session.query(Goal.active_goals).all()
 #     description = db.session.query(Goal.description).all()
 
-#     return render_template("goals.html",
-#                            goals=goals,
-#                            description=description)
+    return render_template("goals.html")
 
 
-# @app.route('/tasks')
-# def render_tasks():
+@app.route('/tasks')
+def render_tasks():
 #     """Queries DB for user's tasks and takes them to tasks.html"""
 
 #     user_id = session["user_id"]
 
 #     tasks = db.session.query(Task.task_name, Task.due_date).filter_by(user_id=user_id).all()
 
-#     return render_template("tasks.html",
-#                            tasks=tasks)
+    return render_template("tasks.html",
+                           tasks="Laundry")
 
 
 # # @login_required

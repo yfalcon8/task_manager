@@ -1,60 +1,42 @@
-<!-- {% block extra_js %} -->
+{% extends "base.html" %}
 
-<!-- Here is where the link to the JS would go once that is coded -->
-<!-- <script type="text/javascript" src="static/"></script> -->
-
-<!-- {% endblock %} -->
 {% block content %}
-{% endblock %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script> 
-<!-- This div will be the fixed left bar for the user to click to act on the tasks that are in the "main task div" below -->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-3 col-lg-2" id="left_bar">
-            <nav class="navbar navbar-default navbar-fixed-side">
-
-            </nav>
-        </div>
-
-<a href="/goals">View Goals</a><br>
-<a href="/calendar">View Calendar</a>
 <!-- This is the main div where the user will see all current tasks. -->
-        <div id="main_task_div" class="col-sm-9 col-lg-10">
-            <!-- Content -->
-            <!-- Jinja loop feed from the db the current tasks -->
-                            <div id="addTaskModal" class="modal"> 
-                    <div class="model-content">
-                        <span class="close">X</span>
-                        <p> 
-                            <form action="/url for server", methods="POST">
-                                Task Name:
-                                 <input type="text" name="taskname"><br>
-                                Due Date:
-                                 <input type="date" name="task_due_date"><br>
-                                Priority 
-                                <select name="priority">
-                                  <option value="high">High</option>
-                                  <option value="medium">Medium</option>
-                                  <option value="low">Low</option>
-                                </select><br>
-                                Task Frequency
-                                <select name="task_frequency">
-                                    <option value="never">Once</option>
-                                    <option value="daily">Daily</option>
-                                    <option value="weekly">Weekly</option>
-                                    <option value="monthly">Monthly</option>
-                                </select><br>
-                                <input type="submit">
-                            </form> 
-                    </p>
-                    </div>
-                </div>
+<div id="main_task_div" class="col-sm-9 col-lg-10">
+
+    <!-- Jinja loop feed from the db the current tasks -->
+    <div id="addTaskModal" class="modal"> 
+        <div class="model-content">
+            <p> 
+                <form action="/url for server", methods="POST">
+
+                    Task Name:
+                     <input type="text" name="taskname"><br>
+
+                    Due Date:
+                     <input type="date" name="task_due_date"><br>
+
+                    Priority 
+                    <select name="priority">
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select><br>
+
+                    Task Frequency
+                    <select name="task_frequency">
+                        <option value="never">Once</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select><br>
+                    <input type="submit">
+                </form> 
+            </p>
+        </div>
+    </div>
 
                 <!-- insert table -->
-                {% for task in tasks %}
-                    <input type="checkbox" name="task" value="{{ task.task_name }}">{{ task.task_name }} {{ task.due_date }}<br>
-                {% endfor %}
 
                             <script type="text/javascript">
                 //make an ajax call that shows the task is added - this is currently an alert box
@@ -112,3 +94,4 @@
         </div>
     </div>
 </div>
+{% endblock %}
