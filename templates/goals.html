@@ -11,15 +11,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 
+<!-- Capture new goal -->
+<form role="form" method="post">
+    <div class="form-group">
+        <input type="text" class="form-control" name="goal_name" placeholder="Define your Goal" required>
+        <input type="date" class="form-control" name="date" placeholder="Accomplish By Date" required>
+    </div>
+    <button type="submit" class="btn btn-default">Submit to Commit</button>
+</form>
+
+<!-- Display recently inputted goal -->
+{{ goal }}, {{ accomplish_by }}
+
+
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-3 col-lg-2" id="left_bar">
-            <nav class="navbar navbar-default navbar-fixed-side">
-                <button id="add_goal">Add Goal</button><br>
-                <button id="complete_goal">Mark Goal Complete</button><br>
-                <button id="delete_goal">Delete Goal</button><br>
-            </nav>
-        </div>
 <!-- This div is the main div where the user will see their current goals -->
         <div id="main_goal_div" class="col-sm-9 col-lg-10">
             <!-- Content  -->

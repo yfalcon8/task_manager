@@ -148,9 +148,15 @@ def landing():
                            username="Minnie")
 
 
-@app.route('/goals')
-def render_goals():
+@app.route('/goals', methods=['GET', 'POST'])
+def goals():
 #     """Queries DB to render the user's goals and takes them to goals.html"""
+
+    if request.method == 'POST':
+        goal = request.form['goal_name']
+        accomplish_by = request.form['date']
+        return render_template('goals.html', goal=goal, accomplish_by=accomplish_by)
+    return render_template('goals.html', goal="Enter a goal!", accomplish_by="It takes 21 days to build a habit.")
 
 #     user_id = session['user_id']
 
@@ -165,19 +171,20 @@ def render_goals():
 #     goals = db.session.query(Goal.active_goals).all()
 #     description = db.session.query(Goal.description).all()
 
-    return render_template("goals.html")
 
-
-@app.route('/tasks')
+@app.route('/tasks', methods=['GET', 'POST'])
 def render_tasks():
 #     """Queries DB for user's tasks and takes them to tasks.html"""
-
+    if request.method == 'POST':
+        task = request.form['task_name']
+        priority = request.form['priority']
+        freq = request.form['frequency']
+        accomplish_by = request.form['date']
+        return render_template('tasks.html', task_name=task, priority=priority, freq=freq, date=accomplish_by)
+    return render_template('tasks.html', task_name=None, priority=None, freq=None, date=None)
 #     user_id = session["user_id"]
 
 #     tasks = db.session.query(Task.task_name, Task.due_date).filter_by(user_id=user_id).all()
-
-    return render_template("tasks.html",
-                           tasks="Laundry")
 
 
 # # @login_required
