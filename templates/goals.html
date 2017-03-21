@@ -1,10 +1,5 @@
 {% extends "base.html" %}
 
-{% block extra_js %}
-<!-- Here is where the link to the JS would go once that is coded -->
-<script type="text/javascript" src="static/"></script>
-{% endblock %}
-
 {% block content %}
 <!-- This div will be the fixed left bar for the user to click to act on the goals that are in the "main goal page div" below -->
 <body>
@@ -12,13 +7,15 @@
     <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
 
 <!-- Capture new goal -->
-<form role="form" method="post">
-    <div class="form-group">
-        <input type="text" class="form-control" name="goal_name" placeholder="Define your Goal" required>
-        <input type="date" class="form-control" name="date" placeholder="Accomplish By Date" required>
-    </div>
-    <button type="submit" class="btn btn-default">Submit to Commit</button>
-</form>
+<div class="container">
+    <form role="form" method="post" onsubmit="return false">
+        <div class="form-group">
+            <input type="text" class="form-control" name="goal_name" placeholder="Define your Goal" required>
+            <input type="date" class="form-control" name="goal_date" placeholder="Accomplish By Date" required>
+        </div>
+        <button type="submit" class="btn btn-default">Submit to Commit</button>
+    </form>
+</div>
 
 <!-- Display recently inputted goal -->
 {{ goal }}, {{ accomplish_by }}

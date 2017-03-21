@@ -5,7 +5,7 @@
 import os
 
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, request, flash, redirect, session
+from flask import Flask, render_template, request, flash, redirect, session, jsonify
 
 from form import LoginForm
 
@@ -150,12 +150,14 @@ def landing():
 
 @app.route('/goals', methods=['GET', 'POST'])
 def goals():
-#     """Queries DB to render the user's goals and takes them to goals.html"""
+    """Displays form for users to add goals. Queries DB to render the user's goals and takes them to goals.html"""
 
     if request.method == 'POST':
         goal = request.form['goal_name']
-        accomplish_by = request.form['date']
-        return render_template('goals.html', goal=goal, accomplish_by=accomplish_by)
+        accomplish_by = request.form['goal_date']
+        data = {"goal_name": goal, "accomplish_by": accomplish_by}
+        return jsonify(data)
+        # return render_template('goals.html', goal=goal, accomplish_by=accomplish_by)
     return render_template('goals.html', goal="Enter a goal!", accomplish_by="It takes 21 days to build a habit.")
 
 #     user_id = session['user_id']
@@ -173,14 +175,17 @@ def goals():
 
 
 @app.route('/tasks', methods=['GET', 'POST'])
-def render_tasks():
-#     """Queries DB for user's tasks and takes them to tasks.html"""
+def tasks():
+    """Displays form for users to add tasks. Queries DB for user's tasks and takes them to tasks.html"""
+
     if request.method == 'POST':
         task = request.form['task_name']
-        priority = request.form['priority']
-        freq = request.form['frequency']
-        accomplish_by = request.form['date']
-        return render_template('tasks.html', task_name=task, priority=priority, freq=freq, date=accomplish_by)
+        priority = request.form['task_priority']
+        freq = request.form['task_frequency']
+        accomplish_by = request.form['task_date']
+        data = {"task_name": task, "priority": priority, "freq": freq, "accomplish_by": accomplish_by}
+        return jsonify(data)
+        # return render_template('tasks.html', task_name=task, priority=priority, freq=freq, date=accomplish_by)
     return render_template('tasks.html', task_name=None, priority=None, freq=None, date=None)
 #     user_id = session["user_id"]
 
