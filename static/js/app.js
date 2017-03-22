@@ -5,23 +5,50 @@ var CLIENT_ID = '608382298047-beqcvm6a4a98p55lr6uben0r5qc7ce3m.apps.googleuserco
 $(document).ready(function() {
     console.log("ready!");
 
+    // capture form values
     $("form").on("submit", function() {
         console.log("the form has been submitted");
 
         var taskName = $('input[name="task_name"]').val();
-        var taskPriorityElem = document.getElementById("task_priority");
-        var taskPriority = taskPriorityElem.options[taskPriorityElem.selectedIndex].value;
-        var taskFrequencyElem = document.getElementById("task_frequency");
-        var taskFrequency = taskFrequencyElem.options[taskFrequencyElem.selectedIndex].value;
-        var taskDate = $('input[name="task_date"]').val();
+
+        if (taskName) {
+            var taskPriorityElem = document.getElementById("task_priority");
+            var taskPriority = taskPriorityElem.options[taskPriorityElem.selectedIndex].value;
+            var taskFrequencyElem = document.getElementById("task_frequency");
+            var taskFrequency = taskFrequencyElem.options[taskFrequencyElem.selectedIndex].value;
+            var taskDate = $('input[name="task_date"]').val();
+        }
 
         var goalName = $('input[name="goal_name"]').val();
         var goalDate = $('input[name="goal_date"]').val();
 
         if (taskName) {
-          console.log(taskName, taskPriority, taskFrequency, taskDate);
-        } else {
-          console.log(goalName, goalDate);
+            console.log(taskName, taskPriority, taskFrequency, taskDate);
+            $.ajax({
+                type: "POST",
+                url: "/tasks",
+                data: {task_name: taskName, task_priority: taskPriority, task_freq: taskFrequency, task_date: taskDate},
+                success: function(results) {
+                    console.log(results);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+        if (goalName) {
+            console.log(goalName, goalDate);
+            $.ajax({
+                type: "POST",
+                url: "/goals",
+                data: {goal_name: goalName, goal_date: goalDate},
+                success: function(results) {
+                    console.log(results);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
         }
     });
 });

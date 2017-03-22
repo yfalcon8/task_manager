@@ -153,8 +153,8 @@ def goals():
     """Displays form for users to add goals. Queries DB to render the user's goals and takes them to goals.html"""
 
     if request.method == 'POST':
-        goal = request.form['goal_name']
-        accomplish_by = request.form['goal_date']
+        goal = request.form.get('goal_name')
+        accomplish_by = request.form.get('goal_date')
         data = {"goal_name": goal, "accomplish_by": accomplish_by}
         return jsonify(data)
         # return render_template('goals.html', goal=goal, accomplish_by=accomplish_by)
@@ -179,10 +179,13 @@ def tasks():
     """Displays form for users to add tasks. Queries DB for user's tasks and takes them to tasks.html"""
 
     if request.method == 'POST':
-        task = request.form['task_name']
-        priority = request.form['task_priority']
-        freq = request.form['task_frequency']
-        accomplish_by = request.form['task_date']
+        print "it's a POST request!"
+        task = request.form.get('task_name')
+        print task
+        priority = request.form.get('task_priority')
+        print priority
+        freq = request.form.get('task_freq')
+        accomplish_by = request.form.get('task_date')
         data = {"task_name": task, "priority": priority, "freq": freq, "accomplish_by": accomplish_by}
         return jsonify(data)
         # return render_template('tasks.html', task_name=task, priority=priority, freq=freq, date=accomplish_by)
