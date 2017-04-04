@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- This div will be the fixed left bar for the user to click to act on the goals that are in the "main goal page div" below -->
-<body>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+
+<h1>Your Goals</h1>
 
 <!-- Capture new goal -->
 <div class="container">
@@ -18,7 +16,7 @@
 </div>
 
 <!-- Display recently inputted goal -->
-{{ goal }}, {{ accomplish_by }}
+{{ goal }} {{ accomplish_by }}
 
 
 <div class="container-fluid">
@@ -29,20 +27,8 @@
             <!-- Jinja loop feed from the db the current goals -->
             <p>% for goal in active_goals %}</p> 
                 show the description
-                <h1>All Goals</h1>
     
-    <div class="w3-container">
 
-        <div class="w3-progress-container">
-            <div id="myBar" class="w3-progressbar w3-green" style="width:80%">
-            <div id="demo" class="w3-container w3-text-white">80%</div>
-            </div>
-        </div>
-        <br>
-
-        <button class="w3-btn w3-dark-grey">Click Me</button>
-
-    </div>
                 <p>check_by_user_id() </p>
 
             <p>% endfor %</p>
